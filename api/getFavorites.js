@@ -1,6 +1,7 @@
 import { MongoClient } from "mongodb";
 
-let cachedClient = null;
+const uri = process.env.MONGO_URI;
+const client = new MongoClient(uri);
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -8,16 +9,16 @@ export default async function handler(req, res) {
   }
 
   try {
-    if (!cachedClient) {
-      cachedClient = await MongoClient.connect(process.env.MONGO_URI);
-    }
-    const db = cachedClient.db("favsDB");
+    await client.connect();
+    const db = client.db("favsDB");
     const collection = db.collection("favorites");
-
     const favorites = await collection.find({}).sort({ date: -1 }).toArray();
-    res.status(200).json(favorites);
+
+    return res.status(200).json(favorites);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to load favorites" });
+    return res.status(500).json({ message: "Failed to fetch favorites" });
+  } finally {
+    await client.close();
   }
 }
