@@ -1,5 +1,25 @@
+// DOM elements
+const gallery = document.getElementById("gallery");
+const addFavBtn = document.getElementById("add-fav-btn");
+const overlay = document.getElementById("overlay");
+const closeBtn = document.getElementById("close-btn");
+const submitBtn = document.getElementById("submit-btn");
+const modelInput = document.getElementById("model");
+const coverInput = document.getElementById("cover");
+const photosetInput = document.getElementById("photoset");
+
 const API_ADD = "/api/addFavorite";
 const API_GET = "/api/getFavorites";
+
+// Show the form
+addFavBtn.addEventListener("click", () => {
+  overlay.style.display = "flex";
+});
+
+// Close the form
+closeBtn.addEventListener("click", () => {
+  overlay.style.display = "none";
+});
 
 // Load gallery from MongoDB
 async function loadGallery() {
@@ -27,7 +47,7 @@ async function loadGallery() {
 loadGallery();
 
 // Submit new favorite
-submitBtn.addEventListener('click', async () => {
+submitBtn.addEventListener("click", async () => {
   const model = modelInput.value.trim();
   const cover = coverInput.value.trim();
   const photoset = photosetInput.value.trim();
@@ -39,15 +59,15 @@ submitBtn.addEventListener('click', async () => {
 
   try {
     const res = await fetch(API_ADD, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ model, cover, photoset })
     });
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Failed to save favorite");
 
-    overlay.style.display = 'none';
+    overlay.style.display = "none";
     modelInput.value = coverInput.value = photosetInput.value = "";
     loadGallery();
   } catch (err) {
