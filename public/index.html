@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Favs Gallery</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <h1>⭐⭐ My Favorites ⭐⭐</h1>
+
+  <!-- Gallery Container -->
+  <div class="gallery" id="gallery"></div>
+
+  <!-- Plus Button -->
+  <button id="add-fav-btn" class="btn">+ Add Favorite</button>
+
+  <!-- Overlay Form to Add New Favorite -->
+  <div class="overlay" id="overlay">
+    <div class="form-container">
+      <h3>Add New Favorite</h3>
+      <input type="text" id="model" placeholder="Model Name" required>
+      <input type="url" id="cover" placeholder="Cover Image URL" required>
+      <input type="url" id="photoset" placeholder="Photoset URL" required>
+      <button id="submit-btn" class="btn">Add Favorite</button>
+      <button id="close-btn" class="btn">Close</button>
+    </div>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>
