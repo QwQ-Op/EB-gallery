@@ -1,14 +1,23 @@
-// api/getFavorites.js
+import { MongoClient } from "mongodb";
 
-import fs from 'fs';
+let cachedClient = null;
 
 export default async function handler(req, res) {
+  if (req.method !== "GET") {
+    return res.status(405).json({ message: "Method Not Allowed" });
+  }
+
   try {
-    const data = fs.readFileSync('./favs.json', 'utf-8');
-    const favorites = JSON.parse(data);
+    if (!cachedClient) {
+      cachedClient = await MongoClient.connect(process.env.MONGO_URI);
+    }
+    const db = cachedClient.db("favsDB");
+    const collection = db.collection("favorites");
+
+    const favorites = await collection.find({}).sort({ date: -1 }).toArray();
     res.status(200).json(favorites);
   } catch (err) {
-    console.error('Error reading favs.json:', err);
-    res.status(500).json({ message: 'Failed to load favorites' });
+    console.error(err);
+    res.status(500).json({ message: "Failed to load favorites" });
   }
 }
