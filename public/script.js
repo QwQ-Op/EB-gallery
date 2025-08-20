@@ -23,6 +23,7 @@ let currentIndex = 0;
 
 const API_ADD = "/api/addFavorite";
 const API_GET = "/api/getFavorites";
+const API_DELETE = "/api/deleteFavorites"; // ✅ new API for deletion
 
 // Show the form
 addFavBtn.addEventListener("click", () => {
@@ -47,10 +48,12 @@ async function loadGallery() {
   try {
     const res = await fetch(API_GET);
     const data = await res.json();
-    data.forEach(item => {
+    galleryData = data; // ✅ save for slideshow + delete reference
+    data.forEach((item, idx) => {
       const card = document.createElement("div");
       card.className = "card";
       card.innerHTML = `
+        ${deleteMode ? `<input type="checkbox" class="delete-checkbox" data-index="${idx}">` : ""}
         <img src="${item.cover}" alt="${item.model}">
         <div class="info">
           <div>${item.model}</div>
