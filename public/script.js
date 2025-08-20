@@ -38,9 +38,11 @@ closeBtn.addEventListener("click", () => {
 // Toggle delete mode
 deleteModeBtn.addEventListener("click", () => {
   deleteMode = !deleteMode;
+  gallery.classList.toggle("delete-mode", deleteMode);
   deleteSelectedBtn.style.display = deleteMode ? "inline-block" : "none";
   loadGallery();
 });
+
 
 // Load gallery from MongoDB
 async function loadGallery() {
@@ -48,12 +50,12 @@ async function loadGallery() {
   try {
     const res = await fetch(API_GET);
     const data = await res.json();
-    galleryData = data; // ✅ save for slideshow + delete reference
-    data.forEach((item, idx) => {
+    galleryData = data; // save for slideshow
+    data.forEach((item, index) => {
       const card = document.createElement("div");
       card.className = "card";
       card.innerHTML = `
-        ${deleteMode ? `<input type="checkbox" class="delete-checkbox" data-index="${idx}">` : ""}
+        ${deleteMode ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` : ""}
         <img src="${item.cover}" alt="${item.model}">
         <div class="info">
           <div>${item.model}</div>
@@ -66,6 +68,7 @@ async function loadGallery() {
     console.error("Error loading gallery:", err);
   }
 }
+
 
 loadGallery();
 
