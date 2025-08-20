@@ -97,3 +97,14 @@ h1 {
 .btn:hover {
   background: #388ae8;
 }
+.delete-checkbox {
+  position: absolute;
+  margin: 10px;
+  transform: scale(1.5);
+  cursor: pointer;
+  z-index: 2;
+}
+
+.card {
+  position: relative; /* allows checkbox to position inside */
+}
