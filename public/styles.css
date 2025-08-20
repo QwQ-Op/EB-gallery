@@ -126,10 +126,10 @@ h1 {
 }
 
 #slideshow-overlay img {
-  margin-bottom: 15px;
-  border-radius: 8px;
-  max-height: 80vh;
-  object-fit: contain;
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.7);
 }
 
 #slideshow-overlay .btn {
