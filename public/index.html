@@ -12,8 +12,11 @@
   <!-- Gallery Container -->
   <div class="gallery" id="gallery"></div>
 
-  <!-- Plus Button -->
+  <!-- Control Buttons -->
   <button id="add-fav-btn" class="btn">+ Add Favorite</button>
+  <button id="delete-mode-btn" class="btn">Delete Favorites</button>
+  <button id="delete-selected-btn" class="btn" style="display:none;">Delete Selected</button>
+
 
   <!-- Overlay Form to Add New Favorite -->
   <div class="overlay" id="overlay">
@@ -25,6 +28,14 @@
       <button id="submit-btn" class="btn">Add Favorite</button>
       <button id="close-btn" class="btn">Close</button>
     </div>
+  </div>
+
+  <!-- Slideshow Overlay -->
+  <div id="slideshow-overlay" class="overlay">
+    <img id="slideshow-img" src="" alt="" style="max-width:90%; max-height:90%;">
+    <button id="prev-btn" class="btn">Prev</button>
+    <button id="next-btn" class="btn">Next</button>
+    <button id="close-slide-btn" class="btn">Close</button>
   </div>
 
   <script src="/script.js"></script>
