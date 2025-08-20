@@ -23,6 +23,7 @@ h1 {
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0,0,0,0.5);
   transition: transform 0.2s;
+  position: relative; /* allows checkbox inside */
 }
 
 .card:hover {
@@ -58,6 +59,7 @@ h1 {
   display: none;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
 
 .form-container {
@@ -97,14 +99,39 @@ h1 {
 .btn:hover {
   background: #388ae8;
 }
+
+/* Delete checkboxes */
 .delete-checkbox {
+  display: none; /* hidden by default */
   position: absolute;
-  margin: 10px;
+  top: 10px;
+  left: 10px;
   transform: scale(1.5);
   cursor: pointer;
   z-index: 2;
 }
 
-.card {
-  position: relative; /* allows checkbox to position inside */
+.delete-mode .delete-checkbox {
+  display: block; /* visible only in delete mode */
+}
+
+/* Slideshow overlay */
+#slideshow-overlay {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: rgba(0,0,0,0.9);
+  z-index: 2000;
+}
+
+#slideshow-overlay img {
+  margin-bottom: 15px;
+  border-radius: 8px;
+  max-height: 80vh;
+  object-fit: contain;
+}
+
+#slideshow-overlay .btn {
+  margin: 5px;
 }
