@@ -50,10 +50,12 @@ async function loadGallery() {
   try {
     const res = await fetch(API_GET);
     const data = await res.json();
-    galleryData = data; // save for slideshow
+    galleryData = data; // <-- IMPORTANT: store data for slideshow use
+
     data.forEach((item, index) => {
       const card = document.createElement("div");
       card.className = "card";
+
       card.innerHTML = `
         ${deleteMode ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` : ""}
         <img src="${item.cover}" alt="${item.model}">
@@ -62,6 +64,7 @@ async function loadGallery() {
           <a href="${item.photoset}" target="_blank">View Set</a>
         </div>
       `;
+
       gallery.appendChild(card);
     });
   } catch (err) {
