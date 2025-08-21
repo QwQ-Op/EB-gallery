@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     await client.connect();
     const db = client.db("favsDB");
     const collection = db.collection("favorites");
-    const favorites = await collection.find({}).sort({ date: -1 }).toArray();
+    const favorites = await collection.find({}).sort({ model: 1 }).toArray();
 
     return res.status(200).json(favorites);
   } catch (err) {
