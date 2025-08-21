@@ -23,8 +23,7 @@ export default async function handler(req, res) {
     const collection = db.collection("favorites");
 
     // Fetch all favorites in same order as frontend
-    const allFavs = await collection.find({}).sort({ date: -1 }).toArray();
-
+    const allFavs = await collection.find({}).sort({ model: 1 }).toArray();
     // Pick IDs to delete
     const toDeleteIds = indexes.map(i => new ObjectId(allFavs[i]._id));
 
