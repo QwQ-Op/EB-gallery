@@ -152,3 +152,30 @@ nextBtn.addEventListener("click", () => {
 closeSlideBtn.addEventListener("click", () => {
   slideshowOverlay.style.display = "none";
 });
+
+// --- Swipe support ---
+let touchStartX = 0;
+let touchEndX = 0;
+
+slideshowOverlay.addEventListener("touchstart", (e) => {
+  touchStartX = e.touches[0].clientX;
+});
+
+slideshowOverlay.addEventListener("touchend", (e) => {
+  touchEndX = e.changedTouches[0].clientX;
+  handleSwipe();
+});
+
+function handleSwipe() {
+  const diff = touchStartX - touchEndX;
+  if (Math.abs(diff) > 50) { // minimum swipe distance
+    if (diff > 0) {
+      // swipe left → next
+      currentIndex = (currentIndex + 1) % galleryData.length;
+    } else {
+      // swipe right → prev
+      currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
+    }
+    slideshowImg.src = galleryData[currentIndex].cover;
+  }
+}
