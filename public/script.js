@@ -153,29 +153,21 @@ closeSlideBtn.addEventListener("click", () => {
   slideshowOverlay.style.display = "none";
 });
 
-// --- Swipe support for slideshow ---
-let touchStartX = 0;
+// --- Tap-to-navigate slideshow ---
+slideshowOverlay.addEventListener("click", (e) => {
+  const rect = slideshowOverlay.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
 
-slideshowOverlay.addEventListener("touchstart", (e) => {
-  if (e.touches.length === 1) { // only track single finger
-    touchStartX = e.touches[0].clientX;
+  if (clickX < rect.width / 2) {
+    // Left half → Previous
+    currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
+  } else {
+    // Right half → Next
+    currentIndex = (currentIndex + 1) % galleryData.length;
   }
+  slideshowImg.src = galleryData[currentIndex].cover;
 });
 
-slideshowOverlay.addEventListener("touchend", (e) => {
-  if (e.changedTouches.length > 1) return; // ignore zoom gestures
-
-  const touchEndX = e.changedTouches[0].clientX;
-  const diff = touchStartX - touchEndX;
-
-  if (Math.abs(diff) > 50) {
-    if (diff > 0) {
-      nextBtn.click(); // swipe left
-    } else {
-      prevBtn.click(); // swipe right
-    }
-  }
-});
 
 // --- Zoom feature for slideshow image ---
 let isZoomed = false;
