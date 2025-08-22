@@ -239,3 +239,30 @@ slideshowImg.addEventListener("touchstart", (e) => {
   document.addEventListener("touchmove", onTouchMove);
   document.addEventListener("touchend", onTouchEnd);
 });
+
+// --- Simple password gate ---
+async function checkPassword() {
+  const pw = document.getElementById("password-input").value;
+  const res = await fetch("/api/checkPassword", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password: pw })
+  });
+  const data = await res.json();
+
+  if (data.success) {
+    localStorage.setItem("auth", "true"); // remember login
+    document.getElementById("lock-screen").style.display = "none";
+    document.getElementById("app").style.display = "block";
+  } else {
+    document.getElementById("error-msg").style.display = "block";
+  }
+}
+
+document.getElementById("login-btn").addEventListener("click", checkPassword);
+
+// Auto-login if already authenticated
+if (localStorage.getItem("auth") === "true") {
+  document.getElementById("lock-screen").style.display = "none";
+  document.getElementById("app").style.display = "block";
+}
