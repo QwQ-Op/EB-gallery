@@ -153,29 +153,89 @@ closeSlideBtn.addEventListener("click", () => {
   slideshowOverlay.style.display = "none";
 });
 
-// --- Swipe support ---
+// --- Swipe support for slideshow ---
 let touchStartX = 0;
-let touchEndX = 0;
 
 slideshowOverlay.addEventListener("touchstart", (e) => {
-  touchStartX = e.touches[0].clientX;
+  if (e.touches.length === 1) { // only track single finger
+    touchStartX = e.touches[0].clientX;
+  }
 });
 
 slideshowOverlay.addEventListener("touchend", (e) => {
-  touchEndX = e.changedTouches[0].clientX;
-  handleSwipe();
+  if (e.changedTouches.length > 1) return; // ignore zoom gestures
+
+  const touchEndX = e.changedTouches[0].clientX;
+  const diff = touchStartX - touchEndX;
+
+  if (Math.abs(diff) > 50) {
+    if (diff > 0) {
+      nextBtn.click(); // swipe left
+    } else {
+      prevBtn.click(); // swipe right
+    }
+  }
 });
 
-function handleSwipe() {
-  const diff = touchStartX - touchEndX;
-  if (Math.abs(diff) > 50) { // minimum swipe distance
-    if (diff > 0) {
-      // swipe left → next
-      currentIndex = (currentIndex + 1) % galleryData.length;
-    } else {
-      // swipe right → prev
-      currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
-    }
-    slideshowImg.src = galleryData[currentIndex].cover;
+// --- Zoom feature for slideshow image ---
+let isZoomed = false;
+let startX = 0, startY = 0;
+let currentX = 0, currentY = 0;
+
+slideshowImg.style.transition = "transform 0.2s ease"; // smooth zoom
+
+// Double tap / double click to zoom
+slideshowImg.addEventListener("dblclick", () => {
+  if (!isZoomed) {
+    slideshowImg.style.transform = "scale(2)";
+    isZoomed = true;
+  } else {
+    slideshowImg.style.transform = "scale(1) translate(0, 0)";
+    isZoomed = false;
+    currentX = currentY = 0;
   }
-}
+});
+
+// Pan (drag) when zoomed in (mouse)
+slideshowImg.addEventListener("mousedown", (e) => {
+  if (!isZoomed) return;
+  startX = e.clientX - currentX;
+  startY = e.clientY - currentY;
+
+  function onMouseMove(ev) {
+    currentX = ev.clientX - startX;
+    currentY = ev.clientY - startY;
+    slideshowImg.style.transform = `scale(2) translate(${currentX / 2}px, ${currentY / 2}px)`;
+  }
+
+  function onMouseUp() {
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("mouseup", onMouseUp);
+  }
+
+  document.addEventListener("mousemove", onMouseMove);
+  document.addEventListener("mouseup", onMouseUp);
+});
+
+// Pan (drag) when zoomed in (touch)
+slideshowImg.addEventListener("touchstart", (e) => {
+  if (!isZoomed) return;
+  const touch = e.touches[0];
+  startX = touch.clientX - currentX;
+  startY = touch.clientY - currentY;
+
+  function onTouchMove(ev) {
+    const t = ev.touches[0];
+    currentX = t.clientX - startX;
+    currentY = t.clientY - startY;
+    slideshowImg.style.transform = `scale(2) translate(${currentX / 2}px, ${currentY / 2}px)`;
+  }
+
+  function onTouchEnd() {
+    document.removeEventListener("touchmove", onTouchMove);
+    document.removeEventListener("touchend", onTouchEnd);
+  }
+
+  document.addEventListener("touchmove", onTouchMove);
+  document.addEventListener("touchend", onTouchEnd);
+});
