@@ -7,37 +7,48 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <h1>⭐⭐ My Favorites ⭐⭐</h1>
-
-  <!-- Gallery Container -->
-  <div class="gallery" id="gallery"></div>
-
-  <!-- Control Buttons -->
-  <div class="controls">
-    <button id="add-fav-btn" class="btn">+ Add Favorite</button>
-    <button id="delete-mode-btn" class="btn">Delete Favorites</button>
-    <button id="delete-selected-btn" class="btn" style="display:none;">Delete Selected</button>
+  <!-- 🔒 Password Gate -->
+  <div id="lock-screen" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh;">
+    <h2>Enter Password</h2>
+    <input id="password-input" type="password" placeholder="Password">
+    <button id="login-btn" class="btn">Enter</button>
+    <p id="error-msg" style="color:red; display:none;">Wrong password</p>
   </div>
 
-  <!-- Overlay Form to Add New Favorite -->
-  <div class="overlay" id="overlay">
-    <div class="form-container">
-      <h3>Add New Favorite</h3>
-      <input type="text" id="model" placeholder="Model Name" required>
-      <input type="url" id="cover" placeholder="Cover Image URL" required>
-      <input type="url" id="photoset" placeholder="Photoset URL" required>
-      <button id="submit-btn" class="btn">Add Favorite</button>
-      <button id="close-btn" class="btn">Close</button>
+  <!-- ✅ Real App (hidden until unlocked) -->
+  <div id="app" style="display:none;">
+    <h1>💫⭐ My Favorites ⭐💫</h1>
+
+    <!-- Gallery Container -->
+    <div class="gallery" id="gallery"></div>
+
+    <!-- Control Buttons -->
+    <div class="controls">
+      <button id="add-fav-btn" class="btn">+ Add Favorite</button>
+      <button id="delete-mode-btn" class="btn">Delete Favorites</button>
+      <button id="delete-selected-btn" class="btn" style="display:none;">Delete Selected</button>
     </div>
-  </div>
 
-  <!-- Slideshow Overlay -->
-  <div id="slideshow-overlay" class="overlay">
-    <img id="slideshow-img" src="" alt="">
-    <div>
-      <button id="prev-btn" class="btn">Prev</button>
-      <button id="next-btn" class="btn">Next</button>
-      <button id="close-slide-btn" class="btn">Close</button>
+    <!-- Overlay Form to Add New Favorite -->
+    <div class="overlay" id="overlay">
+      <div class="form-container">
+        <h3>Add New Favorite</h3>
+        <input type="text" id="model" placeholder="Model Name" required>
+        <input type="url" id="cover" placeholder="Cover Image URL" required>
+        <input type="url" id="photoset" placeholder="Photoset URL" required>
+        <button id="submit-btn" class="btn">Add Favorite</button>
+        <button id="close-btn" class="btn">Close</button>
+      </div>
+    </div>
+
+    <!-- Slideshow Overlay -->
+    <div id="slideshow-overlay" class="overlay">
+      <img id="slideshow-img" src="" alt="">
+      <div>
+        <button id="prev-btn" class="btn">Prev</button>
+        <button id="next-btn" class="btn">Next</button>
+        <button id="close-slide-btn" class="btn">Close</button>
+      </div>
     </div>
   </div>
 
