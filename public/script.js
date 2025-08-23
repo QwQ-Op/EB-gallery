@@ -60,21 +60,39 @@ async function loadGallery() {
   gallery.innerHTML = "";  // Clear the gallery
 
   let data = [];
-  const apiUrl = `/api/fetchJson?set=${currentSet}`;  // Dynamically pass the set (json1 or json2)
-
-  try {
-    const res = await fetch(apiUrl);
-    if (!res.ok) {
-      throw new Error('Failed to load data');
+  if (currentSet === 'json1') {
+    // Fetch data for JSON1 from the new API endpoint
+    const res = await fetch('/api/fetchJson?set=json1');
+    if (res.ok) {
+      data = await res.json();
+    } else {
+      console.error('Failed to fetch JSON1 data');
     }
-    data = await res.json();
-  } catch (err) {
-    console.error("Error loading gallery:", err);
+  } else if (currentSet === 'json2') {
+    // Fetch data for JSON2 from the new API endpoint
+    const res = await fetch('/api/fetchJson?set=json2');
+    if (res.ok) {
+      data = await res.json();
+    } else {
+      console.error('Failed to fetch JSON2 data');
+    }
+  } else if (currentSet === 'favorites') {
+    // Fetch data for Favorites from MongoDB (or backend)
+    const res = await fetch('/api/getFavorites');
+    if (res.ok) {
+      data = await res.json();
+    } else {
+      console.error('Failed to fetch Favorites data');
+    }
   }
 
-  galleryData = data;
-  
   // Render the gallery based on the fetched data
+  galleryData = data;
+  if (data.length === 0) {
+    gallery.innerHTML = "<p>No items found in this category.</p>";
+    return;
+  }
+
   data.forEach((item, index) => {
     const card = document.createElement("div");
     card.className = "card";
