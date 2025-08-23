@@ -149,3 +149,62 @@ h1 {
 @media (hover:none) {
   .btn { padding: 10px 14px; }
 }
+
+
+/* --- Cheeky Atmosphere --- */
+body {
+  background: radial-gradient(circle at top, #1a1a1a, #000);
+  color: #f8f8f8;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Header with glow */
+header h1 {
+  font-size: 2rem;
+  background: linear-gradient(90deg, #ff4b91, #ff884b, #ff4b91);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glow 3s infinite alternate;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 5px #ff4b91; }
+  to { text-shadow: 0 0 20px #ff884b; }
+}
+
+/* Cards with cheeky hover */
+.card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 75, 145, 0.6);
+}
+.card img {
+  border-radius: 16px;
+}
+.card .info {
+  background: rgba(0,0,0,0.7);
+  padding: 8px;
+  border-radius: 0 0 16px 16px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* Buttons */
+.btn {
+  background: linear-gradient(135deg, #ff4b91, #ff884b);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.btn:hover {
+  transform: scale(1.1);
+  background: linear-gradient(135deg, #ff884b, #ff4b91);
+}
