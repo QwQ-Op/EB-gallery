@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
 
-  const { url, title, photoset } = req.body;
+  const { model, cover, photoset } = req.body;
   if (!url || !title || !photoset) {
     return res.status(400).json({ message: "Missing fields" });
   }
@@ -20,8 +20,8 @@ export default async function handler(req, res) {
     const collection = db.collection("favorites");
 
     await collection.insertOne({
-      url,
-      title,
+      model,
+      cover,
       photoset, // 🔥 photoset link included
       date: new Date().toISOString().slice(0, 10)
     });
