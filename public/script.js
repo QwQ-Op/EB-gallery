@@ -137,7 +137,6 @@ gallery.addEventListener("click", e => {
 function openSlideshow(idx) {
   currentIndex = idx;
   updateSlide();
-  document.getElementById("photoset-link").href = galleryData[currentIndex].photoset || "#";
   slideshowOverlay.style.display = "flex";
 }
 
