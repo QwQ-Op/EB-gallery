@@ -276,15 +276,24 @@ slideshowImg.addEventListener("touchstart", (e) => {
     startX = touch.clientX - currentX;
     startY = touch.clientY - currentY;
 
-    // Toggle button event listener
-    document.getElementById("set-toggle-btn").addEventListener("click", (e) => {
-        const targetSet = e.target.dataset.set;
+// Existing button hide logic for json1/json2 toggle
+document.getElementById("set-toggle-btn").addEventListener("click", (e) => {
+    const targetSet = e.target.dataset.set;
 
-        if(targetSet && targetSet !== currentSet) {
-            currentSet = targetSet; // Update the current set (favorites, json1, json2)
-            loadGallery(); // Reload gallery based on the selected set
-        }
-    });
+    if (targetSet && targetSet !== currentSet) {
+        currentSet = targetSet;
+        loadGallery(); // Reload gallery based on the selected set
+    }
+
+    // Hide Add to Favorites and Delete Favorites when json1 or json2 is selected
+    if (targetSet === "json1" || targetSet === "json2") {
+        document.getElementById("addFavBtn").style.display = "none";
+        document.getElementById("deleteModeBtn").style.display = "none";
+    } else {
+        document.getElementById("addFavBtn").style.display = "block";
+        document.getElementById("deleteModeBtn").style.display = "block";
+    }
+});
 
     function onTouchMove(ev) {
         const t = ev.touches[0];
