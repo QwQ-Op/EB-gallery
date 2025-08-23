@@ -331,10 +331,14 @@ if (localStorage.getItem("auth") === "true") {
 document.querySelectorAll(".set-toggle .btn").forEach(button => {
   button.addEventListener("click", (e) => {
     const targetSet = e.target.dataset.set;
-
     if (targetSet && targetSet !== currentSet) {
-      currentSet = targetSet;  // Set the current set (favorites, json1, json2)
-      loadGallery();  // Load the gallery with the selected set
+      currentSet = targetSet;
+      loadGallery();
+
+      // highlight active button
+      document.querySelectorAll(".set-toggle .btn").forEach(b => b.classList.remove("active"));
+      e.target.classList.add("active");
     }
   });
 });
+
