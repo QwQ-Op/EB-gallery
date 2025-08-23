@@ -61,7 +61,7 @@ async function loadGallery() {
         <img src="${item.cover}" alt="${item.model}">
         <div class="info">
           <div>${item.model}</div>
-          <a href="${item.photoset}" target="_blank">View Set</a>
+          ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
         </div>
       `;
 
@@ -71,7 +71,6 @@ async function loadGallery() {
     console.error("Error loading gallery:", err);
   }
 }
-
 
 loadGallery();
 
@@ -138,6 +137,7 @@ gallery.addEventListener("click", e => {
 function openSlideshow(idx) {
   currentIndex = idx;
   slideshowImg.src = galleryData[currentIndex].cover;
+  document.getElementById("photoset-link").href = galleryData[currentIndex].photoset || "#";
   slideshowOverlay.style.display = "flex";
 }
 
