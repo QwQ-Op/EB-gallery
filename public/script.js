@@ -45,54 +45,50 @@ deleteModeBtn.addEventListener("click", () => {
 });
 
 
-// Load gallery from MongoDB
+// Modify the JSON paths to use raw Gist URLs
+async function fetchJsonData(url) {
+  try {
+    const res = await fetch(url);
+    return await res.json();  // Parse JSON response
+  } catch (err) {
+    console.error("Error fetching JSON data:", err);
+    return [];  // Return empty array in case of error
+  }
+}
+
+// Update the loadGallery function to handle JSON1 and JSON2 using the raw Gist URLs
 async function loadGallery() {
-    gallery.innerHTML = ""; // Clear previous gallery
-    try {
-        let res;
-        
-        // Handle buttons visibility based on the current set
-        if (currentSet === 'favorites') {
-            // Show add/delete buttons when on Favorites
-            document.getElementById('add-fav-btn').style.display = 'inline-block';
-            document.getElementById('delete-mode-btn').style.display = 'inline-block';
-            
-            res = await fetch(API_GET); // Fetch Favorites data
-        } else {
-            // Hide add/delete buttons when on JSON1/JSON2
-            document.getElementById('add-fav-btn').style.display = 'none';
-            document.getElementById('delete-mode-btn').style.display = 'none';
+  gallery.innerHTML = ""; // Clear the gallery
 
-            // Fetch static JSON data
-            if (currentSet === 'json1') {
-                res = await fetch(process.env.JSON1); // Fetch JSON1 data
-            } else if (currentSet === 'json2') {
-                res = await fetch(process.env.JSON2); // Fetch JSON2 data
-            }
-        }
+  let data = [];
+  if (currentSet === 'json1') {
+    // Use the Gist URL for JSON1
+    data = await fetchJsonData('https://gist.githubusercontent.com/your-username/your-gist-id/raw/json1.json');
+  } else if (currentSet === 'json2') {
+    // Use the Gist URL for JSON2
+    data = await fetchJsonData('https://gist.githubusercontent.com/your-username/your-gist-id/raw/json2.json');
+  } else {
+    // For 'favorites', fetch data from MongoDB or your own backend
+    const res = await fetch('/api/getFavorites');
+    data = await res.json();
+  }
 
-        const data = await res.json();
-        galleryData = data;
+  // Render the gallery
+  galleryData = data;
+  data.forEach((item, index) => {
+    const card = document.createElement("div");
+    card.className = "card";
 
-        // Render gallery items
-        data.forEach((item, index) => {
-            const card = document.createElement("div");
-            card.className = "card";
-
-            card.innerHTML = `
-                ${deleteMode ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` : ""}
-                <img src="${item.cover}" alt="${item.model}">
-                <div class="info">
-                    <div>${item.model}</div>
-                    ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
-                </div>
-            `;
-
-            gallery.appendChild(card);
-        });
-    } catch (err) {
-        console.error("Error loading gallery:", err);
-    }
+    card.innerHTML = `
+      ${currentSet === 'favorites' ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` : ""}
+      <img src="${item.cover}" alt="${item.model}">
+      <div class="info">
+        <div>${item.model}</div>
+        ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
+      </div>
+    `;
+    gallery.appendChild(card);
+  });
 }
 
 loadGallery();
