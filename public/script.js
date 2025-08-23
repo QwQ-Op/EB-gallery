@@ -20,90 +20,90 @@ const closeSlideBtn = document.getElementById("close-slide-btn");
 let deleteMode = false;
 let galleryData = [];
 let currentIndex = 0;
-let currentSet = 'favorites'; 
+let currentSet = 'favorites';
 
 const API_ADD = "/api/addFavorite";
 const API_GET = "/api/getFavorites";
 const API_DELETE = "/api/deleteFavorites"; // ✅ new API for deletion
 
 const setTitles = {
-  favorites: "💫⭐ My Favorites ⭐💫",
-  json1: "🍑 Cute Butts 🍑",
-  json2: "😻 Innie Pussies 😻"
+    favorites: "💫⭐ My Favorites ⭐💫",
+    json1: "🍑 Cute Butts 🍑",
+    json2: "😻 Innie Pussies 😻"
 };
 
 // Show the form
 addFavBtn.addEventListener("click", () => {
-  overlay.style.display = "flex";
+    overlay.style.display = "flex";
 });
 
 // Close the form
 closeBtn.addEventListener("click", () => {
-  overlay.style.display = "none";
+    overlay.style.display = "none";
 });
 
 // Toggle delete mode
 deleteModeBtn.addEventListener("click", () => {
-  deleteMode = !deleteMode;
-  gallery.classList.toggle("delete-mode", deleteMode);
-  deleteSelectedBtn.style.display = deleteMode ? "inline-block" : "none";
-  loadGallery();
+    deleteMode = !deleteMode;
+    gallery.classList.toggle("delete-mode", deleteMode);
+    deleteSelectedBtn.style.display = deleteMode ? "inline-block" : "none";
+    loadGallery();
 });
 
 
 // Modify the JSON paths to use raw Gist URLs
 async function fetchJsonData(url) {
-  try {
-    const res = await fetch(url);
-    return await res.json();  // Parse JSON response
-  } catch (err) {
-    console.error("Error fetching JSON data:", err);
-    return [];  // Return empty array in case of error
-  }
+    try {
+        const res = await fetch(url);
+        return await res.json(); // Parse JSON response
+    } catch (err) {
+        console.error("Error fetching JSON data:", err);
+        return []; // Return empty array in case of error
+    }
 }
 
 async function loadGallery() {
-  gallery.innerHTML = "";  // Clear the gallery
+    gallery.innerHTML = ""; // Clear the gallery
 
-  let data = [];
+    let data = [];
 
-  if (currentSet === 'json1') {
-    console.log('Loading JSON1 data...');
-    const res = await fetch('/api/fetchJson?set=json1');
-    if (res.ok) {
-      data = await res.json();
-    } else {
-      console.error('Failed to fetch JSON1 data');
+    if(currentSet === 'json1') {
+        console.log('Loading JSON1 data...');
+        const res = await fetch('/api/fetchJson?set=json1');
+        if(res.ok) {
+            data = await res.json();
+        } else {
+            console.error('Failed to fetch JSON1 data');
+        }
+    } else if(currentSet === 'json2') {
+        console.log('Loading JSON2 data...');
+        const res = await fetch('/api/fetchJson?set=json2');
+        if(res.ok) {
+            data = await res.json();
+        } else {
+            console.error('Failed to fetch JSON2 data');
+        }
+    } else if(currentSet === 'favorites') {
+        console.log('Loading favorites...');
+        const res = await fetch('/api/getFavorites');
+        if(res.ok) {
+            data = await res.json();
+        } else {
+            console.error('Failed to fetch favorites data');
+        }
     }
-  } else if (currentSet === 'json2') {
-    console.log('Loading JSON2 data...');
-    const res = await fetch('/api/fetchJson?set=json2');
-    if (res.ok) {
-      data = await res.json();
-    } else {
-      console.error('Failed to fetch JSON2 data');
-    }
-  } else if (currentSet === 'favorites') {
-    console.log('Loading favorites...');
-    const res = await fetch('/api/getFavorites');
-    if (res.ok) {
-      data = await res.json();
-    } else {
-      console.error('Failed to fetch favorites data');
-    }
-  }
 
-  // Render the gallery based on the fetched data
-  galleryData = data;
-  if (data.length === 0) {
-    gallery.innerHTML = "<p>No items found in this category.</p>";
-    return;
-  }
+    // Render the gallery based on the fetched data
+    galleryData = data;
+    if(data.length === 0) {
+        gallery.innerHTML = "<p>No items found in this category.</p>";
+        return;
+    }
 
-  data.forEach((item, index) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
+    data.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
       ${currentSet === 'favorites' ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` : ""}
       <img src="${item.cover}" alt="${item.model}">
       <div class="info">
@@ -111,244 +111,263 @@ async function loadGallery() {
         ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
       </div>
     `;
-    gallery.appendChild(card);
-  });
+        gallery.appendChild(card);
+    });
 }
 
 loadGallery();
 
 // Submit new favorite
 submitBtn.addEventListener("click", async () => {
-  const model = modelInput.value.trim();
-  const cover = coverInput.value.trim();
-  const photoset = photosetInput.value.trim();
+    const model = modelInput.value.trim();
+    const cover = coverInput.value.trim();
+    const photoset = photosetInput.value.trim();
 
-  if (!model || !cover || !photoset) {
-    alert("Please fill all fields");
-    return;
-  }
+    if(!model || !cover || !photoset) {
+        alert("Please fill all fields");
+        return;
+    }
 
-  try {
-    const res = await fetch(API_ADD, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ model, cover, photoset })
-    });
+    try {
+        const res = await fetch(API_ADD, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                model,
+                cover,
+                photoset
+            })
+        });
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || "Failed to save favorite");
+        const data = await res.json();
+        if(!res.ok) throw new Error(data.message || "Failed to save favorite");
 
-    overlay.style.display = "none";
-    modelInput.value = coverInput.value = photosetInput.value = "";
-    loadGallery();
-  } catch (err) {
-    alert("Failed to save favorite: " + err.message);
-  }
+        overlay.style.display = "none";
+        modelInput.value = coverInput.value = photosetInput.value = "";
+        loadGallery();
+    } catch (err) {
+        alert("Failed to save favorite: " + err.message);
+    }
 });
 
 // Delete selected
 deleteSelectedBtn.addEventListener("click", async () => {
-  const selected = Array.from(document.querySelectorAll(".delete-checkbox"))
-    .filter(cb => cb.checked)
-    .map(cb => parseInt(cb.dataset.index));
+    const selected = Array.from(document.querySelectorAll(".delete-checkbox"))
+        .filter(cb => cb.checked)
+        .map(cb => parseInt(cb.dataset.index));
 
-  if (selected.length === 0) return alert("Select at least one favorite");
+    if(selected.length === 0) return alert("Select at least one favorite");
 
-  if (!confirm(`Delete ${selected.length} favorite(s)?`)) return;
+    if(!confirm(`Delete ${selected.length} favorite(s)?`)) return;
 
-  try {
-    const res = await fetch(API_DELETE, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ indexes: selected })
-    });
-    if (!res.ok) throw new Error("Failed to delete favorites");
-    loadGallery();
-  } catch (err) {
-    alert(err.message);
-  }
+    try {
+        const res = await fetch(API_DELETE, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                indexes: selected
+            })
+        });
+        if(!res.ok) throw new Error("Failed to delete favorites");
+        loadGallery();
+    } catch (err) {
+        alert(err.message);
+    }
 });
 
 // Slideshow open on click
 gallery.addEventListener("click", e => {
-  if (e.target.tagName === "IMG" && !deleteMode) {
-    const idx = Array.from(gallery.querySelectorAll(".card img")).indexOf(e.target);
-    if (idx >= 0) openSlideshow(idx);
-  }
+    if(e.target.tagName === "IMG" && !deleteMode) {
+        const idx = Array.from(gallery.querySelectorAll(".card img")).indexOf(e.target);
+        if(idx >= 0) openSlideshow(idx);
+    }
 });
 
 function openSlideshow(idx) {
-  currentIndex = idx;
-  updateSlide();
-  slideshowOverlay.style.display = "flex";
+    currentIndex = idx;
+    updateSlide();
+    slideshowOverlay.style.display = "flex";
 }
 
 prevBtn.addEventListener("click", () => {
-  currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
-  updateSlide();
+    currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
+    updateSlide();
 });
 nextBtn.addEventListener("click", () => {
-  currentIndex = (currentIndex + 1) % galleryData.length;
-  updateSlide();
+    currentIndex = (currentIndex + 1) % galleryData.length;
+    updateSlide();
 });
 closeSlideBtn.addEventListener("click", () => {
-  slideshowOverlay.style.display = "none";
+    slideshowOverlay.style.display = "none";
 });
 
 // --- Tap-to-navigate slideshow ---
 slideshowOverlay.addEventListener("click", (e) => {
-  // ✅ Ignore taps on the image itself or control buttons
-  if (
-    e.target === slideshowImg || 
-    e.target.closest("button") || 
-    e.target.closest("a")
-  ) {
-    return;
-  }
+    // ✅ Ignore taps on the image itself or control buttons
+    if(
+        e.target === slideshowImg ||
+        e.target.closest("button") ||
+        e.target.closest("a")
+    ) {
+        return;
+    }
 
-  const rect = slideshowOverlay.getBoundingClientRect();
-  const clickX = e.clientX - rect.left;
+    const rect = slideshowOverlay.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
 
-  if (clickX < rect.width / 2) {
-    // Left half → Previous
-    currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
-  } else {
-    // Right half → Next
-    currentIndex = (currentIndex + 1) % galleryData.length;
-  }
-  updateSlide();
+    if(clickX < rect.width / 2) {
+        // Left half → Previous
+        currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
+    } else {
+        // Right half → Next
+        currentIndex = (currentIndex + 1) % galleryData.length;
+    }
+    updateSlide();
 });
 
 
 // --- Zoom feature for slideshow image ---
 let isZoomed = false;
-let startX = 0, startY = 0;
-let currentX = 0, currentY = 0;
+let startX = 0,
+    startY = 0;
+let currentX = 0,
+    currentY = 0;
 
 slideshowImg.style.transition = "transform 0.2s ease"; // smooth zoom
 
 // Double tap / double click to zoom
 slideshowImg.addEventListener("dblclick", () => {
-  if (!isZoomed) {
-    slideshowImg.style.transform = "scale(2)";
-    isZoomed = true;
-  } else {
-    slideshowImg.style.transform = "scale(1) translate(0, 0)";
-    isZoomed = false;
-    currentX = currentY = 0;
-  }
+    if(!isZoomed) {
+        slideshowImg.style.transform = "scale(2)";
+        isZoomed = true;
+    } else {
+        slideshowImg.style.transform = "scale(1) translate(0, 0)";
+        isZoomed = false;
+        currentX = currentY = 0;
+    }
 });
 
 // Pan (drag) when zoomed in (mouse)
 slideshowImg.addEventListener("mousedown", (e) => {
-  if (!isZoomed) return;
-  startX = e.clientX - currentX;
-  startY = e.clientY - currentY;
+    if(!isZoomed) return;
+    startX = e.clientX - currentX;
+    startY = e.clientY - currentY;
 
-  function onMouseMove(ev) {
-    currentX = ev.clientX - startX;
-    currentY = ev.clientY - startY;
-    slideshowImg.style.transform = `scale(2) translate(${currentX / 2}px, ${currentY / 2}px)`;
-  }
+    function onMouseMove(ev) {
+        currentX = ev.clientX - startX;
+        currentY = ev.clientY - startY;
+        slideshowImg.style.transform = `scale(2) translate(${currentX / 2}px, ${currentY / 2}px)`;
+    }
 
-  function onMouseUp() {
-    document.removeEventListener("mousemove", onMouseMove);
-    document.removeEventListener("mouseup", onMouseUp);
-  }
+    function onMouseUp() {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+    }
 
-  document.addEventListener("mousemove", onMouseMove);
-  document.addEventListener("mouseup", onMouseUp);
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
 });
 
 // Pan (drag) when zoomed in (touch)
 slideshowImg.addEventListener("touchstart", (e) => {
-  if (!isZoomed) return;
-  const touch = e.touches[0];
-  startX = touch.clientX - currentX;
-  startY = touch.clientY - currentY;
+    if(!isZoomed) return;
+    const touch = e.touches[0];
+    startX = touch.clientX - currentX;
+    startY = touch.clientY - currentY;
 
-// Toggle button event listener
-document.getElementById("set-toggle-btn").addEventListener("click", (e) => {
-    const targetSet = e.target.dataset.set;
+    // Toggle button event listener
+    document.getElementById("set-toggle-btn").addEventListener("click", (e) => {
+        const targetSet = e.target.dataset.set;
 
-    if (targetSet && targetSet !== currentSet) {
-        currentSet = targetSet; // Update the current set (favorites, json1, json2)
-        loadGallery(); // Reload gallery based on the selected set
+        if(targetSet && targetSet !== currentSet) {
+            currentSet = targetSet; // Update the current set (favorites, json1, json2)
+            loadGallery(); // Reload gallery based on the selected set
+        }
+    });
+
+    function onTouchMove(ev) {
+        const t = ev.touches[0];
+        currentX = t.clientX - startX;
+        currentY = t.clientY - startY;
+        slideshowImg.style.transform = `scale(2) translate(${currentX / 2}px, ${currentY / 2}px)`;
     }
-});
 
-  function onTouchMove(ev) {
-    const t = ev.touches[0];
-    currentX = t.clientX - startX;
-    currentY = t.clientY - startY;
-    slideshowImg.style.transform = `scale(2) translate(${currentX / 2}px, ${currentY / 2}px)`;
-  }
+    function onTouchEnd() {
+        document.removeEventListener("touchmove", onTouchMove);
+        document.removeEventListener("touchend", onTouchEnd);
+    }
 
-  function onTouchEnd() {
-    document.removeEventListener("touchmove", onTouchMove);
-    document.removeEventListener("touchend", onTouchEnd);
-  }
-
-  document.addEventListener("touchmove", onTouchMove);
-  document.addEventListener("touchend", onTouchEnd);
+    document.addEventListener("touchmove", onTouchMove);
+    document.addEventListener("touchend", onTouchEnd);
 });
 
 function updateSlide() {
-  slideshowImg.classList.add("fade-out");
-  setTimeout(() => {
-    slideshowImg.src = galleryData[currentIndex].cover;
-    document.getElementById("photoset-link").href = galleryData[currentIndex].photoset || "#";
+    slideshowImg.classList.add("fade-out");
+    setTimeout(() => {
+        slideshowImg.src = galleryData[currentIndex].cover;
+        document.getElementById("photoset-link").href = galleryData[currentIndex].photoset || "#";
 
-    // fade back in when image is loaded
-    slideshowImg.onload = () => {
-      slideshowImg.classList.remove("fade-out");
-    };
-  }, 300); // half of the 0.6s transition
+        // fade back in when image is loaded
+        slideshowImg.onload = () => {
+            slideshowImg.classList.remove("fade-out");
+        };
+    }, 300); // half of the 0.6s transition
 }
 
 // --- Simple password gate ---
 async function checkPassword() {
-  const pw = document.getElementById("password-input").value;
-  const res = await fetch("/api/checkPassword", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ password: pw })
-  });
-  const data = await res.json();
+    const pw = document.getElementById("password-input").value;
+    const res = await fetch("/api/checkPassword", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            password: pw
+        })
+    });
+    const data = await res.json();
 
-  if (data.success) {
-    localStorage.setItem("auth", "true"); // remember login
-    document.getElementById("lock-screen").style.display = "none";
-    document.getElementById("app").style.display = "block";
-  } else {
-    document.getElementById("error-msg").style.display = "block";
-  }
+    if(data.success) {
+        localStorage.setItem("auth", "true"); // remember login
+        document.getElementById("lock-screen").style.display = "none";
+        document.getElementById("app").style.display = "block";
+    } else {
+        document.getElementById("error-msg").style.display = "block";
+    }
 }
 
 document.getElementById("login-btn").addEventListener("click", checkPassword);
 
 // Auto-login if already authenticated
-if (localStorage.getItem("auth") === "true") {
-  document.getElementById("lock-screen").style.display = "none";
-  document.getElementById("app").style.display = "block";
+if(localStorage.getItem("auth") === "true") {
+    document.getElementById("lock-screen").style.display = "none";
+    document.getElementById("app").style.display = "block";
 }
 
 // Toggle button event listener
+const favControls = document.getElementById("fav-controls");
+
 document.querySelectorAll(".set-toggle .btn").forEach(button => {
-  button.addEventListener("click", (e) => {
-    const targetSet = e.target.dataset.set;
-    if (targetSet && targetSet !== currentSet) {
-      currentSet = targetSet;
-      loadGallery();
+    button.addEventListener("click", (e) => {
+        const targetSet = e.target.dataset.set;
+        if(targetSet && targetSet !== currentSet) {
+            currentSet = targetSet;
+            loadGallery();
 
-      // highlight active button
-      document.querySelectorAll(".set-toggle .btn").forEach(b => b.classList.remove("active"));
-      e.target.classList.add("active");
+            // highlight active button
+            document.querySelectorAll(".set-toggle .btn").forEach(b => b.classList.remove("active"));
+            e.target.classList.add("active");
 
-      // ✅ update header title
-      document.getElementById("page-title").textContent = setTitles[targetSet] || "💫⭐ My Favorites ⭐💫";
-    }
-  });
+            // update header title
+            document.getElementById("page-title").textContent = setTitles[targetSet] || "💫⭐ My Favorites ⭐💫";
+
+            // ✅ show/hide favorites controls
+            favControls.style.display = (targetSet === "favorites") ? "block" : "none";
+        }
+    });
 });
-
-
