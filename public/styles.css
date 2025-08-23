@@ -251,3 +251,24 @@ header h1 {
   color: #fff;
   box-shadow: 0 0 25px rgba(255, 20, 147, 0.8);
 }
+
+/* Fade for gallery switching */
+.gallery {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+.gallery.fade-out {
+  opacity: 0;
+}
+
+/* Controls slide + fade */
+#fav-controls {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+#fav-controls.hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
