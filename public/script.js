@@ -26,6 +26,12 @@ const API_ADD = "/api/addFavorite";
 const API_GET = "/api/getFavorites";
 const API_DELETE = "/api/deleteFavorites"; // ✅ new API for deletion
 
+const setTitles = {
+  favorites: "💫⭐ My Favorites ⭐💫",
+  json1: "🍑 Cute Butts 🍑",
+  json2: "😻 Innie Pussies 😻"
+};
+
 // Show the form
 addFavBtn.addEventListener("click", () => {
   overlay.style.display = "flex";
@@ -338,7 +344,11 @@ document.querySelectorAll(".set-toggle .btn").forEach(button => {
       // highlight active button
       document.querySelectorAll(".set-toggle .btn").forEach(b => b.classList.remove("active"));
       e.target.classList.add("active");
+
+      // ✅ update header title
+      document.getElementById("page-title").textContent = setTitles[targetSet] || "💫⭐ My Favorites ⭐💫";
     }
   });
 });
+
 
