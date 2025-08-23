@@ -57,27 +57,27 @@ async function fetchJsonData(url) {
 }
 
 async function loadGallery() {
-  gallery.innerHTML = ""; // Clear the gallery
+  gallery.innerHTML = "";  // Clear the gallery
 
   let data = [];
-  if (currentSet === 'json1') {
-    // Use the Gist URL for JSON1
-    data = await fetchJsonData(process.env.JSON1);
-  } else if (currentSet === 'json2') {
-    // Use the Gist URL for JSON2
-    data = await fetchJsonData(process.env.JSON2);
-  } else {
-    // For 'favorites', fetch data from MongoDB or your own backend
-    const res = await fetch('/api/getFavorites');
+  const apiUrl = `/api/fetchJson?set=${currentSet}`;  // Dynamically pass the set (json1 or json2)
+
+  try {
+    const res = await fetch(apiUrl);
+    if (!res.ok) {
+      throw new Error('Failed to load data');
+    }
     data = await res.json();
+  } catch (err) {
+    console.error("Error loading gallery:", err);
   }
 
-  // Render the gallery
   galleryData = data;
+  
+  // Render the gallery based on the fetched data
   data.forEach((item, index) => {
     const card = document.createElement("div");
     card.className = "card";
-
     card.innerHTML = `
       ${currentSet === 'favorites' ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` : ""}
       <img src="${item.cover}" alt="${item.model}">
