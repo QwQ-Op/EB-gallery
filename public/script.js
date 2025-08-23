@@ -20,6 +20,7 @@ const closeSlideBtn = document.getElementById("close-slide-btn");
 let deleteMode = false;
 let galleryData = [];
 let currentIndex = 0;
+let currentSet = 'favorites'; 
 
 const API_ADD = "/api/addFavorite";
 const API_GET = "/api/getFavorites";
@@ -46,30 +47,52 @@ deleteModeBtn.addEventListener("click", () => {
 
 // Load gallery from MongoDB
 async function loadGallery() {
-  gallery.innerHTML = "";
-  try {
-    const res = await fetch(API_GET);
-    const data = await res.json();
-    galleryData = data; // <-- IMPORTANT: store data for slideshow use
+    gallery.innerHTML = ""; // Clear previous gallery
+    try {
+        let res;
+        
+        // Handle buttons visibility based on the current set
+        if (currentSet === 'favorites') {
+            // Show add/delete buttons when on Favorites
+            document.getElementById('add-fav-btn').style.display = 'inline-block';
+            document.getElementById('delete-mode-btn').style.display = 'inline-block';
+            
+            res = await fetch(API_GET); // Fetch Favorites data
+        } else {
+            // Hide add/delete buttons when on JSON1/JSON2
+            document.getElementById('add-fav-btn').style.display = 'none';
+            document.getElementById('delete-mode-btn').style.display = 'none';
 
-    data.forEach((item, index) => {
-      const card = document.createElement("div");
-      card.className = "card";
+            // Fetch static JSON data
+            if (currentSet === 'json1') {
+                res = await fetch(process.env.JSON1); // Fetch JSON1 data
+            } else if (currentSet === 'json2') {
+                res = await fetch(process.env.JSON2); // Fetch JSON2 data
+            }
+        }
 
-      card.innerHTML = `
-        ${deleteMode ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` : ""}
-        <img src="${item.cover}" alt="${item.model}">
-        <div class="info">
-          <div>${item.model}</div>
-          ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
-        </div>
-      `;
+        const data = await res.json();
+        galleryData = data;
 
-      gallery.appendChild(card);
-    });
-  } catch (err) {
-    console.error("Error loading gallery:", err);
-  }
+        // Render gallery items
+        data.forEach((item, index) => {
+            const card = document.createElement("div");
+            card.className = "card";
+
+            card.innerHTML = `
+                ${deleteMode ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` : ""}
+                <img src="${item.cover}" alt="${item.model}">
+                <div class="info">
+                    <div>${item.model}</div>
+                    ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
+                </div>
+            `;
+
+            gallery.appendChild(card);
+        });
+    } catch (err) {
+        console.error("Error loading gallery:", err);
+    }
 }
 
 loadGallery();
@@ -223,6 +246,16 @@ slideshowImg.addEventListener("touchstart", (e) => {
   const touch = e.touches[0];
   startX = touch.clientX - currentX;
   startY = touch.clientY - currentY;
+
+// Toggle button event listener
+document.getElementById("set-toggle-btn").addEventListener("click", (e) => {
+    const targetSet = e.target.dataset.set;
+
+    if (targetSet && targetSet !== currentSet) {
+        currentSet = targetSet; // Update the current set (favorites, json1, json2)
+        loadGallery(); // Reload gallery based on the selected set
+    }
+});
 
   function onTouchMove(ev) {
     const t = ev.touches[0];
