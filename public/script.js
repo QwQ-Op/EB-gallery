@@ -136,18 +136,18 @@ gallery.addEventListener("click", e => {
 
 function openSlideshow(idx) {
   currentIndex = idx;
-  slideshowImg.src = galleryData[currentIndex].cover;
+  updateSlide();
   document.getElementById("photoset-link").href = galleryData[currentIndex].photoset || "#";
   slideshowOverlay.style.display = "flex";
 }
 
 prevBtn.addEventListener("click", () => {
   currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
-  slideshowImg.src = galleryData[currentIndex].cover;
+  updateSlide();
 });
 nextBtn.addEventListener("click", () => {
   currentIndex = (currentIndex + 1) % galleryData.length;
-  slideshowImg.src = galleryData[currentIndex].cover;
+  updateSlide();
 });
 closeSlideBtn.addEventListener("click", () => {
   slideshowOverlay.style.display = "none";
@@ -170,7 +170,7 @@ slideshowOverlay.addEventListener("click", (e) => {
     // Right half → Next
     currentIndex = (currentIndex + 1) % galleryData.length;
   }
-  slideshowImg.src = galleryData[currentIndex].cover;
+  updateSlide();
 });
 
 
@@ -236,6 +236,16 @@ slideshowImg.addEventListener("touchstart", (e) => {
   document.addEventListener("touchmove", onTouchMove);
   document.addEventListener("touchend", onTouchEnd);
 });
+
+function updateSlide() {
+  slideshowImg.classList.add("fade-out");
+  setTimeout(() => {
+    updateSlide();
+    slideshowImg.onload = () => {
+      slideshowImg.classList.remove("fade-out");
+    };
+  }, 300); // delay matches half of CSS transition
+}
 
 // --- Simple password gate ---
 async function checkPassword() {
