@@ -3,8 +3,7 @@
   --card: #151521; 
   --muted: #9aa0a6; 
   --text: #e8eaed; 
-  --accent: #ff1493; /* Neon pink for accent */
-  --gradient: linear-gradient(45deg, #ff1493, #ff0057); /* Neon pink gradient */
+  --accent: #7aa2ff; 
 }
 
 * { box-sizing: border-box; }
@@ -16,7 +15,19 @@ html, body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; 
 }
 
-/* Cards */
+h1 { 
+  text-align: center; 
+  font-size: 26px;
+  margin-bottom: 16px;
+}
+
+.gallery { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+  gap: 12px; 
+  padding: 12px 16px 24px;
+}
+
 .card { 
   background: var(--card); 
   border: 1px solid #2a2d44; 
@@ -29,10 +40,72 @@ html, body {
 
 .card:hover { 
   transform: translateY(-2px); 
-  box-shadow: 0 8px 24px rgba(255, 20, 147, 0.6); /* Neon pink hover */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25); 
 }
 
-/* Buttons with neon glow */
+.card img { 
+  width: 100%; 
+  height: 200px;
+  object-fit: cover;
+}
+
+.info { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--muted); 
+}
+
+.info a { 
+  color: var(--accent); 
+  text-decoration: none; 
+}
+
+.info a:hover { 
+  text-decoration: underline;
+}
+
+.overlay {
+  position: fixed; 
+  inset: 0; 
+  background: rgba(0,0,0,0.9); 
+  display: none; 
+  align-items: center; 
+  justify-content: center; 
+  flex-direction: column; 
+  gap: 12px; 
+  padding: 16px;
+}
+
+.overlay img { 
+  max-width: 95vw; 
+  max-height: 80dvh; 
+  object-fit: contain;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  z-index: 1000;
+}
+
+.close-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
 .btn { 
   background: var(--accent); 
   color: #0b0b0f; 
@@ -40,42 +113,245 @@ html, body {
   padding: 8px 12px; 
   border-radius: 10px; 
   cursor: pointer; 
-  box-shadow: 0 0 10px rgba(255, 20, 147, 0.5); /* Neon glow */
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.btn:hover { 
-  background: var(--gradient); 
-  box-shadow: 0 0 20px rgba(255, 20, 147, 0.7); /* Hover glow */
 }
 
-/* Gradient neon glow for titles */
-h1, h2 {
+.btn:hover { 
+  background: #262a46;
+}
+
+.btn.primary { 
+  background: var(--accent);
+  color: #0b0b0f;
+}
+
+.input { 
+  width: 100%; 
+  padding: 10px 12px; 
+  border-radius: 10px; 
+  border: 1px solid #2a2d44; 
+  background: #0f111a; 
+  color: var(--text);
+}
+
+.delete-checkbox {
+  display: none; 
+}
+
+.delete-mode .delete-checkbox {
+  display: block;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  transform: scale(1.5);
+  cursor: pointer;
+}
+
+@media (hover:none) {
+  .btn { padding: 10px 14px; }
+}
+
+
+/* --- Cheeky Atmosphere --- */
+body {
+  background: radial-gradient(circle at top, #1a1a1a, #000);
+  color: #f8f8f8;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Header with glow */
+header h1 {
   font-size: 2rem;
-  background: var(--gradient);
+  background: linear-gradient(90deg, #ff4b91, #ff884b, #ff4b91);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: glow 3s infinite alternate;
 }
 
 @keyframes glow {
-  from { text-shadow: 0 0 5px #ff1493; }
-  to { text-shadow: 0 0 20px #ff0057; }
+  from { text-shadow: 0 0 5px #ff4b91; }
+  to { text-shadow: 0 0 20px #ff884b; }
 }
 
-/* Active/selected buttons */
+/* Cards with cheeky hover */
+.card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 75, 145, 0.6);
+}
+.card img {
+  border-radius: 16px;
+}
+.card .info {
+  background: rgba(0,0,0,0.7);
+  padding: 8px;
+  border-radius: 0 0 16px 16px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* Buttons */
+.btn {
+  background: linear-gradient(135deg, #ff4b91, #ff884b);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.btn:hover {
+  transform: scale(1.1);
+  background: linear-gradient(135deg, #ff884b, #ff4b91);
+}
+
+#slideshow-img {
+  transition: opacity 0.6s ease-in-out;
+  opacity: 1;
+}
+#slideshow-img.fade-out {
+  opacity: 0;
+}
+.set-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.set-toggle .btn {
+  background: #111; /* deep dark background */
+  border: 2px solid rgba(255, 20, 147, 0.7); /* neon pink border */
+  color: #f0f0f0;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px; /* pill shaped */
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 0 8px rgba(255, 20, 147, 0.3);
+}
+
+/* Hover effect: glow intensifies */
+.set-toggle .btn:hover {
+  background: rgba(255, 20, 147, 0.15);
+  box-shadow: 0 0 15px rgba(255, 20, 147, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Active/Selected button */
 .set-toggle .btn.active {
-  background: var(--gradient);
+  background: linear-gradient(135deg, #ff1493, #ff0057);
+  color: #fff;
   box-shadow: 0 0 25px rgba(255, 20, 147, 0.8);
 }
 
-/* Gallery Hover */
-.gallery .card:hover {
-  transform: scale(1.05); 
-  box-shadow: 0 0 25px rgba(255, 20, 147, 0.6);
+/* Fade for gallery switching */
+.gallery {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+.gallery.fade-out {
+  opacity: 0;
 }
 
-/* Lock screen */
-#lock-screen .lock-card {
-  box-shadow: 0 0 30px #ff1493, 0 0 60px #ff1493, 0 0 90px #ff1493;
+/* Controls slide + fade */
+#fav-controls {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+#fav-controls.hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
 }
 
+/* Title fade effect */
+#page-title {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  display: inline-block;
+}
+#page-title.fade-out {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+
+/* --- Full-page centered password lock screen --- */
+#lock-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85); /* Darken the background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.lock-card {
+  background: #1c1c1c; /* Dark background for the card */
+  padding: 3rem; /* Increased padding for a bigger card */
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 0 30px #ff2d95, 0 0 60px #ff2d95, 0 0 90px #ff2d95; /* Neon glow */
+  color: #fff;
+  animation: pulse-glow 2s infinite alternate;
+  max-width: 500px; /* Increased max-width */
+  width: 90%;
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 20px #ff2d95, 0 0 40px #ff2d95, 0 0 60px #ff2d95;
+  }
+  100% {
+    box-shadow: 0 0 40px #ff2d95, 0 0 80px #ff2d95, 0 0 120px #ff2d95;
+  }
+}
+
+.lock-card h2 {
+  margin-bottom: 1.5rem; /* Increased margin for better spacing */
+  font-size: 1.8rem; /* Bigger font size for title */
+}
+
+.lock-card .input {
+  padding: 0.8rem; /* Slightly larger padding */
+  margin-bottom: 1.5rem; /* Increased space below the input */
+  width: 100%;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 1.1rem; /* Larger text */
+}
+
+.lock-card .btn {
+  padding: 0.8rem 1.4rem; /* Slightly larger button */
+  border: none;
+  border-radius: 8px;
+  background: #ff2d95;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1.1rem; /* Bigger text for the button */
+  transition: transform 0.2s;
+}
+
+.lock-card .btn:hover {
+  transform: scale(1.05); /* Slight hover effect */
+}
+
+.error-msg {
+  color: #ff4444;
+  margin-top: 0.5rem;
+  display: none;
+}
