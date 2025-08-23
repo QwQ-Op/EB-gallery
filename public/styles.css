@@ -3,7 +3,7 @@
   --card: #151521; 
   --muted: #9aa0a6; 
   --text: #e8eaed; 
-  --accent: #7aa2ff; 
+  --accent: #ff1493; /* Changed to a pinkish gradient for consistency */
 }
 
 * { box-sizing: border-box; }
@@ -150,7 +150,6 @@ h1 {
   .btn { padding: 10px 14px; }
 }
 
-
 /* --- Cheeky Atmosphere --- */
 body {
   background: radial-gradient(circle at top, #1a1a1a, #000);
@@ -161,15 +160,15 @@ body {
 /* Header with glow */
 header h1 {
   font-size: 2rem;
-  background: linear-gradient(90deg, #ff4b91, #ff884b, #ff4b91);
+  background: linear-gradient(90deg, #ff1493, #ff0099, #ff1493); /* pink gradient */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: glow 3s infinite alternate;
 }
 
 @keyframes glow {
-  from { text-shadow: 0 0 5px #ff4b91; }
-  to { text-shadow: 0 0 20px #ff884b; }
+  from { text-shadow: 0 0 5px #ff1493; }
+  to { text-shadow: 0 0 20px #ff0099; }
 }
 
 /* Cards with cheeky hover */
@@ -181,7 +180,7 @@ header h1 {
 }
 .card:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(255, 75, 145, 0.6);
+  box-shadow: 0 0 20px rgba(255, 20, 147, 0.6);
 }
 .card img {
   border-radius: 16px;
@@ -196,7 +195,7 @@ header h1 {
 
 /* Buttons */
 .btn {
-  background: linear-gradient(135deg, #ff4b91, #ff884b);
+  background: linear-gradient(135deg, #ff1493, #ff0099); /* pink gradient */
   border: none;
   padding: 10px 16px;
   border-radius: 999px;
@@ -206,7 +205,7 @@ header h1 {
 }
 .btn:hover {
   transform: scale(1.1);
-  background: linear-gradient(135deg, #ff884b, #ff4b91);
+  background: linear-gradient(135deg, #ff0099, #ff1493);
 }
 
 #slideshow-img {
@@ -215,41 +214,6 @@ header h1 {
 }
 #slideshow-img.fade-out {
   opacity: 0;
-}
-.set-toggle {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin: 1.5rem 0;
-}
-
-.set-toggle .btn {
-  background: #111; /* deep dark background */
-  border: 2px solid rgba(255, 20, 147, 0.7); /* neon pink border */
-  color: #f0f0f0;
-  padding: 0.6rem 1.2rem;
-  border-radius: 50px; /* pill shaped */
-  font-size: 0.95rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  box-shadow: 0 0 8px rgba(255, 20, 147, 0.3);
-}
-
-/* Hover effect: glow intensifies */
-.set-toggle .btn:hover {
-  background: rgba(255, 20, 147, 0.15);
-  box-shadow: 0 0 15px rgba(255, 20, 147, 0.6);
-  transform: translateY(-2px);
-}
-
-/* Active/Selected button */
-.set-toggle .btn.active {
-  background: linear-gradient(135deg, #ff1493, #ff0057);
-  color: #fff;
-  box-shadow: 0 0 25px rgba(255, 20, 147, 0.8);
 }
 
 /* Fade for gallery switching */
@@ -261,18 +225,6 @@ header h1 {
   opacity: 0;
 }
 
-/* Controls slide + fade */
-#fav-controls {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
-#fav-controls.hidden {
-  opacity: 0;
-  transform: translateY(-10px);
-  pointer-events: none;
-}
-
 /* Title fade effect */
 #page-title {
   transition: opacity 0.4s ease, transform 0.4s ease;
@@ -282,7 +234,6 @@ header h1 {
   opacity: 0;
   transform: translateY(-10px);
 }
-
 
 /* --- Full-page centered password lock screen --- */
 #lock-screen {
@@ -304,7 +255,7 @@ header h1 {
   padding: 3rem; /* Increased padding for a bigger card */
   border-radius: 16px;
   text-align: center;
-  box-shadow: 0 0 30px #ff2d95, 0 0 60px #ff2d95, 0 0 90px #ff2d95; /* Neon glow */
+  box-shadow: 0 0 30px #ff1493, 0 0 60px #ff1493, 0 0 90px #ff1493; /* Neon pink glow */
   color: #fff;
   animation: pulse-glow 2s infinite alternate;
   max-width: 500px; /* Increased max-width */
@@ -313,10 +264,10 @@ header h1 {
 
 @keyframes pulse-glow {
   0% {
-    box-shadow: 0 0 20px #ff2d95, 0 0 40px #ff2d95, 0 0 60px #ff2d95;
+    box-shadow: 0 0 20px #ff1493, 0 0 40px #ff1493, 0 0 60px #ff1493;
   }
   100% {
-    box-shadow: 0 0 40px #ff2d95, 0 0 80px #ff2d95, 0 0 120px #ff2d95;
+    box-shadow: 0 0 40px #ff1493, 0 0 80px #ff1493, 0 0 120px #ff1493;
   }
 }
 
@@ -339,7 +290,7 @@ header h1 {
   padding: 0.8rem 1.4rem; /* Slightly larger button */
   border: none;
   border-radius: 8px;
-  background: #ff2d95;
+  background: #ff1493;
   color: #fff;
   cursor: pointer;
   font-size: 1.1rem; /* Bigger text for the button */
