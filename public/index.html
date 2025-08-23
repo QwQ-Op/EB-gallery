@@ -2,52 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Favs Gallery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>💫⭐ My Favorites ⭐💫</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <!-- 🔒 Password Gate -->
-  <div id="lock-screen" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh;">
-    <h2>Enter Password</h2>
-    <input id="password-input" type="password" placeholder="Password">
-    <button id="login-btn" class="btn">Enter</button>
-    <p id="error-msg" style="color:red; display:none;">Wrong password</p>
+  <div id="lock-screen" class="center">
+    <div class="card panel">
+      <h2>🔒 Enter Password</h2>
+      <input id="password-input" type="password" class="input" placeholder="Password">
+      <button id="login-btn" class="btn primary">Enter</button>
+      <p id="error-msg" class="error" style="display:none;">Wrong password</p>
+    </div>
   </div>
 
-  <!-- ✅ Real App (hidden until unlocked) -->
+  <!-- ✅ Real App -->
   <div id="app" style="display:none;">
-    <h1>💫⭐ My Favorites ⭐💫</h1>
+    <header class="header">
+      <h1>💫⭐ My Favorites ⭐💫</h1>
+      <div class="controls">
+        <button id="add-fav-btn" class="btn">+ Add Favorite</button>
+        <button id="delete-mode-btn" class="btn">Delete Favorites</button>
+        <button id="delete-selected-btn" class="btn" style="display:none;">Delete Selected</button>
+      </div>
+    </header>
 
-    <!-- Gallery Container -->
-    <div class="gallery" id="gallery"></div>
+    <main>
+      <div id="gallery" class="gallery"></div>
+    </main>
 
-    <!-- Control Buttons -->
-    <div class="controls">
-      <button id="add-fav-btn" class="btn">+ Add Favorite</button>
-      <button id="delete-mode-btn" class="btn">Delete Favorites</button>
-      <button id="delete-selected-btn" class="btn" style="display:none;">Delete Selected</button>
-    </div>
-
-    <!-- Overlay Form to Add New Favorite -->
-    <div class="overlay" id="overlay">
-      <div class="form-container">
-        <h3>Add New Favorite</h3>
-        <input type="text" id="model" placeholder="Model Name" required>
-        <input type="url" id="cover" placeholder="Cover Image URL" required>
-        <input type="url" id="photoset" placeholder="Photoset URL" required>
-        <button id="submit-btn" class="btn">Add Favorite</button>
-        <button id="close-btn" class="btn">Close</button>
+    <!-- Slideshow -->
+    <div id="slideshow-overlay" class="overlay">
+      <button id="close-slide-btn" class="close-btn">×</button>
+      <img id="slideshow-img" src="" alt="">
+      <div class="slideshow-controls">
+        <button id="prev-btn" class="btn">Prev</button>
+        <button id="next-btn" class="btn">Next</button>
       </div>
     </div>
 
-    <!-- Slideshow Overlay -->
-    <div id="slideshow-overlay" class="overlay">
-      <img id="slideshow-img" src="" alt="">
-      <div>
-        <button id="prev-btn" class="btn">Prev</button>
-        <button id="next-btn" class="btn">Next</button>
-        <button id="close-slide-btn" class="btn">Close</button>
+    <!-- Add Favorite Overlay -->
+    <div id="overlay" class="overlay">
+      <div class="form-container">
+        <h3>Add New Favorite</h3>
+        <input type="text" id="model" class="input" placeholder="Model Name" required>
+        <input type="url" id="cover" class="input" placeholder="Cover Image URL" required>
+        <input type="url" id="photoset" class="input" placeholder="Photoset URL" required>
+        <button id="submit-btn" class="btn primary">Add Favorite</button>
+        <button id="close-btn" class="btn">Close</button>
       </div>
     </div>
   </div>
