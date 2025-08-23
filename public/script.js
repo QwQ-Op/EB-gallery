@@ -63,10 +63,10 @@ async function loadGallery() {
   let data = [];
   if (currentSet === 'json1') {
     // Use the Gist URL for JSON1
-    data = await fetchJsonData('https://gist.githubusercontent.com/your-username/your-gist-id/raw/json1.json');
+    data = await fetchJsonData(process.env.JSON1);
   } else if (currentSet === 'json2') {
     // Use the Gist URL for JSON2
-    data = await fetchJsonData('https://gist.githubusercontent.com/your-username/your-gist-id/raw/json2.json');
+    data = await fetchJsonData(process.env.JSON2);
   } else {
     // For 'favorites', fetch data from MongoDB or your own backend
     const res = await fetch('/api/getFavorites');
