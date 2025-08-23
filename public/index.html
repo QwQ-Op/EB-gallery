@@ -1,68 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>💫⭐🤩⭐💫</title>
-  <link rel="stylesheet" href="/styles.css">
-</head>
-<body>
-  <!-- 🔒 Password Gate -->
-  <div id="lock-screen" class="center">
-    <div class="card panel">
-      <h2>🔒 Enter Password</h2>
-      <input id="password-input" type="password" class="input" placeholder="Password">
-      <button id="login-btn" class="btn primary">Enter</button>
-      <p id="error-msg" class="error" style="display:none;">Wrong password</p>
-    </div>
-  </div>
-
-  <!-- ✅ Real App -->
-  <div id="app" style="display:none;">
-    <header class="header">
-      <h1 id="page-title">💫⭐ My Favorites ⭐💫</h1>
-
-<div class="set-toggle">
-    <button class="btn" data-set="favorites">Favorites</button>
-    <button class="btn" data-set="json1">JSON1</button>
-    <button class="btn" data-set="json2">JSON2</button>
-</div>
-
-      <div class="controls">
-        <button id="add-fav-btn" class="btn">+ Add Favorite</button>
-        <button id="delete-mode-btn" class="btn">Delete Favorites</button>
-        <button id="delete-selected-btn" class="btn" style="display:none;">Delete Selected</button>
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>💫⭐🤩⭐💫</title>
+      <link rel="stylesheet" href="/styles.css">
+   </head>
+   <body>
+      <!-- 🔒 Password Gate -->
+      <div id="lock-screen" class="center">
+         <div class="card panel">
+            <h2>🔒 Enter Password</h2>
+            <input id="password-input" type="password" class="input" placeholder="Password">
+            <button id="login-btn" class="btn primary">Enter</button>
+            <p id="error-msg" class="error" style="display:none;">Wrong password</p>
+         </div>
       </div>
-    </header>
-
-    <main>
-      <div id="gallery" class="gallery"></div>
-    </main>
-
-    <!-- Slideshow -->
-    <div id="slideshow-overlay" class="overlay">
-      <button id="close-slide-btn" class="close-btn">×</button>
-      <img id="slideshow-img" src="" alt="">
-      <div class="slideshow-controls">
-        <button id="prev-btn" class="btn">Prev</button>
-<a id="photoset-link" class="btn" href="#" target="_blank">View Set</a>
-        <button id="next-btn" class="btn">Next</button>
+      <!-- ✅ Real App -->
+      <div id="app" style="display:none;">
+         <header class="header">
+            <h1 id="page-title">💫⭐ My Favorites ⭐💫</h1>
+            <div class="set-toggle">
+               <button class="btn" data-set="favorites">Favorites</button>
+               <button class="btn" data-set="json1">JSON1</button>
+               <button class="btn" data-set="json2">JSON2</button>
+            </div>
+            <div class="controls" id="fav-controls">
+               <button id="add-fav-btn" class="btn">+ Add Favorite</button>
+               <button id="delete-mode-btn" class="btn">Delete Favorites</button>
+               <button id="delete-selected-btn" class="btn" style="display:none;">Delete Selected</button>
+            </div>
+         </header>
+         <main>
+            <div id="gallery" class="gallery"></div>
+         </main>
+         <!-- Slideshow -->
+         <div id="slideshow-overlay" class="overlay">
+            <button id="close-slide-btn" class="close-btn">×</button>
+            <img id="slideshow-img" src="" alt="">
+            <div class="slideshow-controls">
+               <button id="prev-btn" class="btn">Prev</button>
+               <a id="photoset-link" class="btn" href="#" target="_blank">View Set</a>
+               <button id="next-btn" class="btn">Next</button>
+            </div>
+         </div>
+         <!-- Add Favorite Overlay -->
+         <div id="overlay" class="overlay">
+            <div class="form-container">
+               <h3>Add New Favorite</h3>
+               <input type="text" id="model" class="input" placeholder="Model Name" required>
+               <input type="url" id="cover" class="input" placeholder="Cover Image URL" required>
+               <input type="url" id="photoset" class="input" placeholder="Photoset URL" required>
+               <button id="submit-btn" class="btn primary">Add Favorite</button>
+               <button id="close-btn" class="btn">Close</button>
+            </div>
+         </div>
       </div>
-    </div>
-
-    <!-- Add Favorite Overlay -->
-    <div id="overlay" class="overlay">
-      <div class="form-container">
-        <h3>Add New Favorite</h3>
-        <input type="text" id="model" class="input" placeholder="Model Name" required>
-        <input type="url" id="cover" class="input" placeholder="Cover Image URL" required>
-        <input type="url" id="photoset" class="input" placeholder="Photoset URL" required>
-        <button id="submit-btn" class="btn primary">Add Favorite</button>
-        <button id="close-btn" class="btn">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="/script.js"></script>
-</body>
+      <script src="/script.js"></script>
+   </body>
 </html>
