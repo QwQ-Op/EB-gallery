@@ -155,7 +155,11 @@ closeSlideBtn.addEventListener("click", () => {
 // --- Tap-to-navigate slideshow ---
 slideshowOverlay.addEventListener("click", (e) => {
   // ✅ Ignore taps on the image itself or control buttons
-  if (e.target === slideshowImg || e.target.closest("button")) {
+  if (
+    e.target === slideshowImg || 
+    e.target.closest("button") || 
+    e.target.closest("a")
+  ) {
     return;
   }
 
