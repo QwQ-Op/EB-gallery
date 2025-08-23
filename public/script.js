@@ -56,7 +56,6 @@ async function fetchJsonData(url) {
   }
 }
 
-// Update the loadGallery function to handle JSON1 and JSON2 using the raw Gist URLs
 async function loadGallery() {
   gallery.innerHTML = ""; // Clear the gallery
 
@@ -308,3 +307,15 @@ if (localStorage.getItem("auth") === "true") {
   document.getElementById("lock-screen").style.display = "none";
   document.getElementById("app").style.display = "block";
 }
+
+// Toggle button event listener
+document.querySelectorAll(".set-toggle .btn").forEach(button => {
+  button.addEventListener("click", (e) => {
+    const targetSet = e.target.dataset.set;
+
+    if (targetSet && targetSet !== currentSet) {
+        currentSet = targetSet; // Update the current set (favorites, json1, json2)
+        loadGallery(); // Reload gallery based on the selected set
+    }
+  });
+});
