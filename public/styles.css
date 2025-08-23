@@ -208,6 +208,15 @@ header h1 {
   transform: scale(1.1);
   background: linear-gradient(135deg, #ff884b, #ff4b91);
 }
+.controls {
+    display: flex;
+    justify-content: space-between; /* Space between buttons */
+    align-items: center;
+}
+
+.set-toggle {
+    margin-left: 10px; /* Adjust space between control buttons and toggle buttons */
+}
 
 #slideshow-img {
   transition: opacity 0.6s ease-in-out;
