@@ -314,7 +314,7 @@ header h1 {
   gap: 1rem;
   margin: 1.5rem 0;
 }
-
+ 
 .set-toggle .btn {
   background: #111; /* Deep dark background */
   border: 2px solid rgba(255, 20, 147, 0.7); /* Neon pink border */
