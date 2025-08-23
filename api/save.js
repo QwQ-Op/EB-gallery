@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   }
 
   const { model, cover, photoset } = req.body;
-  if (!url || !title || !photoset) {
+if (!model || !cover || !photoset){
     return res.status(400).json({ message: "Missing fields" });
   }
 
