@@ -366,8 +366,21 @@ document.querySelectorAll(".set-toggle .btn").forEach(button => {
             // update header title
             document.getElementById("page-title").textContent = setTitles[targetSet] || "💫⭐ My Favorites ⭐💫";
 
-            // ✅ show/hide favorites controls
-            favControls.style.display = (targetSet === "favorites") ? "block" : "none";
+            // ✅ Animate controls
+            if(targetSet === "favorites") {
+                favControls.classList.remove("hidden");
+            } else {
+                favControls.classList.add("hidden");
+            }
+
+            // ✅ Animate gallery fade
+            gallery.classList.add("fade-out");
+            setTimeout(() => {
+                loadGallery().then(() => {
+                    gallery.classList.remove("fade-out");
+                });
+            }, 400);
+
         }
     });
 });
