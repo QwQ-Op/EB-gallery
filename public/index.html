@@ -8,14 +8,16 @@
    </head>
    <body>
       <!-- 🔒 Password Gate -->
-      <div id="lock-screen" class="center">
-         <div class="card panel">
-            <h2>🔒 Enter Password</h2>
-            <input id="password-input" type="password" class="input" placeholder="Password">
-            <button id="login-btn" class="btn primary">Enter</button>
-            <p id="error-msg" class="error" style="display:none;">Wrong password</p>
-         </div>
-      </div>
+
+<div id="lock-screen" class="center">
+  <div class="lock-card"> <!-- Changed from card panel to lock-card -->
+    <h2>🔒 Enter Password</h2>
+    <input id="password-input" type="password" class="input" placeholder="Password">
+    <button id="login-btn" class="btn primary">Enter</button>
+    <p id="error-msg" class="error" style="display:none;">Wrong password</p>
+  </div>
+</div>
+
       <!-- ✅ Real App -->
       <div id="app" style="display:none;">
          <header class="header">
