@@ -17,6 +17,8 @@ const prevBtn = document.getElementById("prev-btn");
 const nextBtn = document.getElementById("next-btn");
 const closeSlideBtn = document.getElementById("close-slide-btn");
 
+const pageTitle = document.getElementById("page-title");
+
 let deleteMode = false;
 let galleryData = [];
 let currentIndex = 0;
@@ -26,11 +28,6 @@ const API_ADD = "/api/addFavorite";
 const API_GET = "/api/getFavorites";
 const API_DELETE = "/api/deleteFavorites"; // ✅ new API for deletion
 
-const setTitles = {
-    favorites: "💫⭐ My Favorites ⭐💫",
-    json1: "🍑 Cute Butts 🍑",
-    json2: "😻 Innie Pussies 😻"
-};
 
 // Show the form
 addFavBtn.addEventListener("click", () => {
@@ -318,6 +315,19 @@ function updateSlide() {
     }, 300); // half of the 0.6s transition
 }
 
+function updateTitle(set) {
+  let newTitle = "💫⭐ My Favorites ⭐💫";
+  if (set === "json1") newTitle = "🍑 Cute Butts 🍑";
+  if (set === "json2") newTitle = "😻 Innie Pussies 😻";
+
+  // Fade out → change → fade in
+  pageTitle.classList.add("fade-out");
+  setTimeout(() => {
+    pageTitle.textContent = newTitle;
+    pageTitle.classList.remove("fade-out");
+  }, 400);
+}
+
 // --- Simple password gate ---
 async function checkPassword() {
     const pw = document.getElementById("password-input").value;
@@ -356,15 +366,14 @@ document.querySelectorAll(".set-toggle .btn").forEach(button => {
     button.addEventListener("click", (e) => {
         const targetSet = e.target.dataset.set;
         if(targetSet && targetSet !== currentSet) {
-            currentSet = targetSet;
-            loadGallery();
-
+             currentSet = targetSet;
+  updateTitle(currentSet); // 🔥 animate title change
+  loadGallery().then(() => {
+    gallery.classList.remove("fade-out");
+  });
             // highlight active button
             document.querySelectorAll(".set-toggle .btn").forEach(b => b.classList.remove("active"));
             e.target.classList.add("active");
-
-            // update header title
-            document.getElementById("page-title").textContent = setTitles[targetSet] || "💫⭐ My Favorites ⭐💫";
 
             // ✅ Animate controls
             if(targetSet === "favorites") {
