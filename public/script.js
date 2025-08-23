@@ -60,8 +60,9 @@ async function loadGallery() {
   gallery.innerHTML = "";  // Clear the gallery
 
   let data = [];
+
   if (currentSet === 'json1') {
-    // Fetch data for JSON1 from the new API endpoint
+    console.log('Loading JSON1 data...');
     const res = await fetch('/api/fetchJson?set=json1');
     if (res.ok) {
       data = await res.json();
@@ -69,7 +70,7 @@ async function loadGallery() {
       console.error('Failed to fetch JSON1 data');
     }
   } else if (currentSet === 'json2') {
-    // Fetch data for JSON2 from the new API endpoint
+    console.log('Loading JSON2 data...');
     const res = await fetch('/api/fetchJson?set=json2');
     if (res.ok) {
       data = await res.json();
@@ -77,12 +78,12 @@ async function loadGallery() {
       console.error('Failed to fetch JSON2 data');
     }
   } else if (currentSet === 'favorites') {
-    // Fetch data for Favorites from MongoDB (or backend)
+    console.log('Loading favorites...');
     const res = await fetch('/api/getFavorites');
     if (res.ok) {
       data = await res.json();
     } else {
-      console.error('Failed to fetch Favorites data');
+      console.error('Failed to fetch favorites data');
     }
   }
 
@@ -332,8 +333,8 @@ document.querySelectorAll(".set-toggle .btn").forEach(button => {
     const targetSet = e.target.dataset.set;
 
     if (targetSet && targetSet !== currentSet) {
-        currentSet = targetSet; // Update the current set (favorites, json1, json2)
-        loadGallery(); // Reload gallery based on the selected set
+      currentSet = targetSet;  // Set the current set (favorites, json1, json2)
+      loadGallery();  // Load the gallery with the selected set
     }
   });
 });
