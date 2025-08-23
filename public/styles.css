@@ -272,3 +272,13 @@ header h1 {
   transform: translateY(-10px);
   pointer-events: none;
 }
+
+/* Title fade effect */
+#page-title {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  display: inline-block;
+}
+#page-title.fade-out {
+  opacity: 0;
+  transform: translateY(-10px);
+}
