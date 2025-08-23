@@ -240,11 +240,14 @@ slideshowImg.addEventListener("touchstart", (e) => {
 function updateSlide() {
   slideshowImg.classList.add("fade-out");
   setTimeout(() => {
-    updateSlide();
+    slideshowImg.src = galleryData[currentIndex].cover;
+    document.getElementById("photoset-link").href = galleryData[currentIndex].photoset || "#";
+
+    // fade back in when image is loaded
     slideshowImg.onload = () => {
       slideshowImg.classList.remove("fade-out");
     };
-  }, 300); // delay matches half of CSS transition
+  }, 300); // half of the 0.6s transition
 }
 
 // --- Simple password gate ---
