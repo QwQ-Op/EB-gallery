@@ -358,12 +358,6 @@ header h1 {
 }
 
 
-/* --- Sleazy Pink Neon Theme & Modern Font --- */
-@import url('https://fonts.googleapis.com/css2?family=Satisfy&display=swap');
-
-body, h1, h2, .btn, .set-toggle .btn, .lock-card, .info, .card .info {
-    font-family: 'Satisfy', cursive, system-ui;
-}
 
 /* Header / Page title glow */
 header h1, #page-title {
@@ -407,6 +401,12 @@ header h1, #page-title {
     background: linear-gradient(135deg, #ff1493, #ff884b);
     color: #fff;
     transition: all 0.2s ease;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
+
+body, h1, h2, .btn, .set-toggle .btn, .lock-card, .info, .card .info {
+    font-family: 'Dancing Script', cursive, system-ui;
 }
 
 .lock-card .btn:hover {
