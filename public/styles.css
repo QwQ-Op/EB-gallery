@@ -12,7 +12,6 @@ html, body {
   padding: 0; 
   background: var(--bg); 
   color: var(--text); 
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; 
 }
 
 h1 { 
@@ -155,7 +154,6 @@ h1 {
 body {
   background: radial-gradient(circle at top, #1a1a1a, #000);
   color: #f8f8f8;
-  font-family: 'Poppins', sans-serif;
 }
 
 /* Header with glow */
