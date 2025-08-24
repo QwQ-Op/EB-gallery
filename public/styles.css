@@ -355,3 +355,55 @@ header h1 {
   margin-top: 0.5rem;
   display: none;
 }
+
+
+/* --- Pink neon gradient + sleazy font --- */
+@import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap'); /* sleazy fun font */
+
+:root {
+  --accent: #ff1493;
+  --gradient: linear-gradient(135deg, #ff1493, #ff0057);
+}
+
+/* Header */
+header h1 {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glow 3s infinite alternate;
+  font-family: 'Monoton', cursive, system-ui;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 5px #ff1493; }
+  to { text-shadow: 0 0 20px #ff0057; }
+}
+
+/* Buttons */
+.btn, .set-toggle .btn {
+  background: var(--gradient);
+  color: #fff;
+  box-shadow: 0 0 8px rgba(255,20,147,0.5);
+  font-family: 'Monoton', cursive, system-ui;
+}
+
+.btn:hover, .set-toggle .btn:hover {
+  box-shadow: 0 0 15px rgba(255,20,147,0.7);
+  transform: translateY(-1px);
+}
+
+.set-toggle .btn.active {
+  background: var(--gradient);
+  box-shadow: 0 0 25px rgba(255,20,147,0.8);
+}
+
+/* Lock card glow */
+.lock-card {
+  box-shadow: 0 0 30px #ff1493, 0 0 60px #ff1493, 0 0 90px #ff1493;
+  font-family: 'Monoton', cursive, system-ui;
+}
+
+/* Info text */
+.info, .card .info {
+  font-family: 'Monoton', cursive, system-ui;
+}
