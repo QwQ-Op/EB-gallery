@@ -1,10 +1,13 @@
-:root { 
-  --bg: #0b0b0f; 
-  --card: #151521; 
-  --muted: #9aa0a6; 
-  --text: #e8eaed; 
-  --accent: #7aa2ff; 
+:root {
+  --bg: #0b0b0f;
+  --card: #151521;
+  --muted: #9aa0a6;
+  --text: #e8eaed;
+  --accent: #ff1493;
+  --gradient: linear-gradient(135deg, #ff1493, #ff0057);
+  --main-font: 'Dancing Script', cursive, system-ui;
 }
+
 
 * { box-sizing: border-box; }
 html, body { 
@@ -356,10 +359,7 @@ header h1 {
 
 
 
-:root {
-  --accent: #ff1493;
-  --gradient: linear-gradient(135deg, #ff1493, #ff0057);
-}
+
 
 /* Header */
 header h1 {
@@ -396,10 +396,6 @@ header h1 {
   box-shadow: 0 0 30px #ff1493, 0 0 60px #ff1493, 0 0 90px #ff1493;
 }
 
-/* --- Font variable for easy swap --- */
-:root {
-  --main-font: 'Dancing Script', cursive, system-ui; /* change this later to any font you like */
-}
 
 body, h1, h2, .btn, .set-toggle .btn, .lock-card, .info, .card .info {
   font-family: var(--main-font);
