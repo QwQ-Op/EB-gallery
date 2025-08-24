@@ -1,3 +1,6 @@
+/* --- Pink neon gradient + sleazy font --- */
+@import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap'); /* sleazy fun font */
+
 :root { 
   --bg: #0b0b0f; 
   --card: #151521; 
@@ -357,8 +360,6 @@ header h1 {
 }
 
 
-/* --- Pink neon gradient + sleazy font --- */
-@import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap'); /* sleazy fun font */
 
 :root {
   --accent: #ff1493;
