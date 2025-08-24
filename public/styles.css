@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Neonderthaw&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Rouge+Script&display=swap');
 
 :root {
   --bg: #0b0b0f;
@@ -8,7 +7,7 @@
   --text: #e8eaed;
   --accent: #ff1493;
   --gradient: linear-gradient(135deg, #ff1493, #ff0057);
-  --main-font: 'Neonderthaw', cursive;
+  --main-font: 'Rouge Script', cursive;
 }
 
 
