@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   const { fileName, jsonData, saveToMongo } = req.body;
 
   if (!fileName || !jsonData) {
-    return res.status(400).json({ message: 'Missing fileName or jsonData or both' });
+    return res.status(400).json({ message: 'Missing fileName or jsonData or both  🧡💢' });
   }
 
   const token = process.env.GITHUB_ACCESS_TOKEN; // Ensure this is in your .env file
