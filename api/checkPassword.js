@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     }
 
     // ✅ Check visit limit FIRST
-    if (doc.count > -1){//(doc.count >= 2) {
+    if (doc.count < 0){//(doc.count >= 2) {
       return res.status(403).json({ success: false, message: "No visits left this week" });
     }
 
