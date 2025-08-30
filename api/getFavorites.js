@@ -8,6 +8,13 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
 
+  // 🔒 check cookie first
+  const cookies = req.headers.cookie || "";
+  const session = cookies.split(";").find(c => c.trim().startsWith("session="));
+  if (!session) {
+    return res.status(401).json({ message: "Not authorized" });
+  }
+
   try {
     await client.connect();
     const db = client.db("favsDB");
