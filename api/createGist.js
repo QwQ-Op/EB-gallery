@@ -5,6 +5,10 @@ const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
 
 export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', 'https://www.elitebabes.com');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
