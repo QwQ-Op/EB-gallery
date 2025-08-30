@@ -22,7 +22,7 @@ export default async function handler(req, res) {
   const token = process.env.GITHUB_ACCESS_TOKEN; // Ensure this is in your .env file
 
   const gistData = {
-    description: 'A new JSON Gist created via API',
+    description: 'A new JSON Gist created via API for personal use!~',
     public: true,
     files: {
       [fileName]: {
