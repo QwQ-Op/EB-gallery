@@ -1,4 +1,5 @@
 import { MongoClient } from "mongodb";
+import crypto from "crypto";
 
 const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
@@ -10,11 +11,6 @@ export default async function handler(req, res) {
 
   const { password } = req.body;
   const correctPassword = process.env.SITE_PASSWORD;
-
-  // Step 1: Check password first
-  if (password !== correctPassword) {
-    return res.status(401).json({ success: false, message: "Wrong password" });
-  }
 
   try {
     await client.connect();
@@ -31,19 +27,29 @@ export default async function handler(req, res) {
       await visits.insertOne(doc);
     }
 
-    // Step 2: Check if visits are already exhausted
+    // ✅ Check visit limit FIRST
     if (doc.count >= 2) {
       return res.status(403).json({ success: false, message: "No visits left this week" });
     }
 
-    // Step 3: Increment visits since password was correct
+    // Now check password
+    if (password !== correctPassword) {
+      return res.status(401).json({ success: false, message: "Wrong password" });
+    }
+
+    // increment count
     await visits.updateOne(
       { year: now.getFullYear(), week },
       { $inc: { count: 1 } }
     );
 
-    return res.status(200).json({ success: true, message: "Access granted" });
+    // 🔑 create a simple session token
+    const token = crypto.randomBytes(16).toString("hex");
 
+    // send as cookie
+    res.setHeader("Set-Cookie", `session=${token}; HttpOnly; Path=/; Max-Age=7200`);
+
+    return res.status(200).json({ success: true, message: "Access granted" });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ success: false, message: "Server error" });
