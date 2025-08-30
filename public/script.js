@@ -352,7 +352,6 @@ async function checkPassword() {
     const data = await res.json();
 
     if(data.success) {
-        localStorage.setItem("auth", "true"); // remember login
         document.getElementById("lock-screen").style.display = "none";
         document.getElementById("app").style.display = "block";
     } else {
