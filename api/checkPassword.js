@@ -34,7 +34,7 @@ export default async function handler(req, res) {
 
     // Now check password
     if (password !== correctPassword) {
-      return res.status(401).json({ success: false, message: "Wrong password" });
+      return res.status(401).json({ success: false, message: "Wrong password entered!" });
     }
 
     // increment count
