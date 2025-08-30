@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  const { fileName, jsonData } = req.body;
+  const { fileName, jsonData, saveToMongo } = req.body;
 
   if (!fileName || !jsonData) {
     return res.status(400).json({ message: 'Missing fileName or jsonData' });
@@ -40,11 +40,14 @@ export default async function handler(req, res) {
     const rawUrl = response.data.files[fileName].raw_url;
 
     // Step 3: Store the raw URL in MongoDB
+   if (saveToMongo) {
     await client.connect();
     const database = client.db('favsDB'); // Replace with your DB name
     const collection = database.collection('gists');
     await collection.insertOne({ fileName, rawUrl });
-
+     
+    console.log(`Raw URL saved to MongoDB: ${rawUrl}`);
+   }
     // Step 4: Send the raw URL as the response
     return res.status(200).json({ rawUrl });
   } catch (error) {
