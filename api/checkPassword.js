@@ -1,4 +1,5 @@
 import { MongoClient } from "mongodb";
+import crypto from "crypto";
 
 const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
@@ -9,7 +10,7 @@ export default async function handler(req, res) {
   }
 
   const { password } = req.body;
-  const correctPassword = process.env.SITE_PASSWORD; 
+  const correctPassword = process.env.SITE_PASSWORD;
 
   if (password !== correctPassword) {
     return res.status(401).json({ success: false, message: "Wrong password" });
@@ -17,7 +18,7 @@ export default async function handler(req, res) {
 
   try {
     await client.connect();
-    const db = client.db("favsDB"); 
+    const db = client.db("favsDB");
     const visits = db.collection("visits");
 
     const now = new Date();
@@ -39,6 +40,12 @@ export default async function handler(req, res) {
       { year: now.getFullYear(), week },
       { $inc: { count: 1 } }
     );
+
+    // 🔑 create a simple session token
+    const token = crypto.randomBytes(16).toString("hex");
+
+    // send as cookie
+    res.setHeader("Set-Cookie", `session=${token}; HttpOnly; Path=/; Max-Age=7200`);
 
     return res.status(200).json({ success: true, message: "Access granted" });
   } catch (err) {
