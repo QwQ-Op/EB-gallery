@@ -454,6 +454,8 @@ gallery.querySelectorAll(".view-set-btn").forEach(btn => {
 });
 
 async function renderCollection(gistUrl, collectionTitle, collectionImg) {
+    console.log("renderCollections called", collections.length);
+
 gallery.innerHTML = "";
     try {
         // Fetch gist JSON
