@@ -463,15 +463,19 @@ async function renderCollection(gistUrl, collectionTitle, collectionImg) {
     // Save data globally for slideshow
     galleryData = data.content;
 
-    // Render collection items
-    gallery.innerHTML = data.content.map((item, idx) => `
-      <div class="card" data-idx="${idx}">
+ gallery.innerHTML = "";
+    data.content.forEach((item, idx) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
         <img src="${item.cover}" alt="${item.model}">
         <div class="info">
-          <h3>${item.model}</h3>
+          <div>${item.model}</div>
+          ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
         </div>
-      </div>
-    `).join("");
+      `;
+      gallery.appendChild(card);
+    });
 
   } catch (err) {
     console.error("Error rendering collection:", err);
