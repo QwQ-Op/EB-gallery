@@ -58,6 +58,8 @@ async function fetchJsonData(url) {
 }
 
 async function loadGallery() {
+  console.log("✅ loadGallery called for", currentSet); // DEBUG
+
     gallery.innerHTML = ""; // Clear the gallery
 
     let data = [];
