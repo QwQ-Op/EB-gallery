@@ -352,6 +352,7 @@ function updateTitle(set) {
   let newTitle = "💫⭐ My Favorites ⭐💫";
   if (set === "json1") newTitle = "🍑 Cute Butts 🍑";
   if (set === "json2") newTitle = "😻 Innie Pussies 😻";
+  if (set === "json2") newTitle = "📚 Collections 📚";
 
   // Fade out → change → fade in
   pageTitle.classList.add("fade-out");
