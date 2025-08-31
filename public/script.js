@@ -459,3 +459,14 @@ async function loadCollection(gistUrl, title, titleImg) {
         gallery.appendChild(card);
     });
 }
+
+// Attach click for "View Set" buttons
+gallery.querySelectorAll(".view-set-btn").forEach(btn => {
+  btn.addEventListener("click", e => {
+    e.stopPropagation(); // prevent triggering the card click
+    const raw = btn.dataset.raw;
+    const title = btn.dataset.title;
+    const img = btn.dataset.img;
+    loadCollection(raw, title, img);
+  });
+});
