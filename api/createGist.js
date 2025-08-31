@@ -62,7 +62,7 @@ export default async function handler(req, res) {
         title_img,
         description,
         collection_url,
-        createdAt: new Date()
+        date: new Date().toISOString().slice(0, 10)
       });
 
       console.log(`Saved to Mongo: ${title}`);
