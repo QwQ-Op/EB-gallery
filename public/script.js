@@ -470,14 +470,14 @@ card.innerHTML = `
   <h3>${col.title}</h3>
   <button 
     class="open-slideshow-btn" 
-    data-gist-url="${col.gist_raw_url}" 
+    data-gist-url="${col.rawUrl}" 
     data-title="${col.title}" 
     data-title-img="${col.title_img}">
     Open Slideshow
   </button>
   <button 
     class="view-set-btn" 
-    data-gist-url="${col.gist_raw_url}" 
+    data-gist-url="${col.rawUrl}" 
     data-title="${col.title}" 
     data-title-img="${col.title_img}">
     View Set
