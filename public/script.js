@@ -416,9 +416,6 @@ document.querySelectorAll(".set-toggle .btn").forEach(button => {
         if(targetSet && targetSet !== currentSet) {
             currentSet = targetSet;
             updateTitle(currentSet); // 🔥 animate title change
-            loadGallery().then(() => {
-                gallery.classList.remove("fade-out");
-            });
             // highlight active button
             document.querySelectorAll(".set-toggle .btn").forEach(b => b.classList.remove("active"));
             e.target.classList.add("active");
