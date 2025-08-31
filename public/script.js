@@ -128,8 +128,8 @@ if (currentSet === 'favorites') {
     `;
 
     // 👇 This makes the collection open
-    card.addEventListener("click", () => {
-        loadCollection(item.rawUrl, item.title, item.title_img);
+    card.addEventListener("click", async () => {
+        await loadCollection(item.rawUrl, item.title, item.title_img);
     });
 }
         gallery.appendChild(card);
