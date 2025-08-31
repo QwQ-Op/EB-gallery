@@ -123,7 +123,7 @@ if (currentSet === 'favorites') {
       <img src="${item.title_img}" alt="${item.title}">
       <div class="info">
         <div>${item.title}</div>
-        ${item.collection_url ? `<a href="${item.collection_url}" target="_blank" class="view-set-btn">Source</a>` : ""}
+        ${item.rawUrl ? `<button class="view-set-btn" data-raw="${item.rawUrl}" data-title="${item.title}" data-img="${item.title_img}">View Set</button>` : ""}
       </div>
     `;
 
