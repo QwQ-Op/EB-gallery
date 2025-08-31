@@ -201,7 +201,7 @@ deleteSelectedBtn.addEventListener("click", async () => {
 });
 
 // Slideshow open on click
-gallery.addEventListener("click", e => {
+gallery.addEventListener("click", async (e) => {
     if(e.target.tagName === "IMG" && !deleteMode) {
         const idx = Array.from(gallery.querySelectorAll(".card img")).indexOf(e.target);
         if(idx >= 0) openSlideshow(idx);
