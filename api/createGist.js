@@ -9,9 +9,8 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  // Handle the preflight OPTIONS request
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();  // Respond with 200 OK for OPTIONS requests
+    return res.status(200).end();
   }
 
   if (req.method !== 'POST') {
@@ -21,10 +20,10 @@ export default async function handler(req, res) {
   const { fileName, jsonData, saveToMongo } = req.body;
 
   if (!fileName || !jsonData) {
-    return res.status(400).json({ message: 'Missing fileName or jsonData or both  🧡💢' });
+    return res.status(400).json({ message: 'Missing fileName or jsonData or both 💢' });
   }
 
-  const token = process.env.GITHUB_ACCESS_TOKEN; // Ensure this is in your .env file
+  const token = process.env.GITHUB_ACCESS_TOKEN;
 
   const gistData = {
     description: 'A new JSON Gist created via API for personal use!~',
@@ -37,7 +36,7 @@ export default async function handler(req, res) {
   };
 
   try {
-    // Step 1: Create the Gist on GitHub
+    // Step 1: Create the Gist
     const response = await axios.post('https://api.github.com/gists', gistData, {
       headers: {
         Authorization: `token ${token}`,
@@ -45,22 +44,34 @@ export default async function handler(req, res) {
       },
     });
 
-    // Step 2: Extract the raw URL from the response
+    // Step 2: Extract raw URL
     const rawUrl = response.data.files[fileName].raw_url;
 
-    // Step 3: Store the raw URL in MongoDB
-   if (saveToMongo) {
-    await client.connect();
-    const database = client.db('favsDB'); // Replace with your DB name
-    const collection = database.collection('gists');
-    await collection.insertOne({ fileName, rawUrl });
-     
-    console.log(`Raw URL saved to MongoDB: ${rawUrl}`);
-   }
-    // Step 4: Send the raw URL as the response
+    // Step 3: Store in MongoDB
+    if (saveToMongo) {
+      await client.connect();
+      const database = client.db('favsDB'); // your DB
+      const collection = database.collection('collections');
+
+      const { title, title_img, description, collection_url } = jsonData;
+
+      await collection.insertOne({
+        fileName,
+        rawUrl,
+        title,
+        title_img,
+        description,
+        collection_url,
+        createdAt: new Date()
+      });
+
+      console.log(`Saved to Mongo: ${title}`);
+    }
+
+    // Step 4: Return raw URL
     return res.status(200).json({ rawUrl });
   } catch (error) {
-    console.error('Error creating gist:', error);
+    console.error('Error creating gist:', error?.response?.data || error);
     return res.status(500).json({ message: 'Failed to create Gist or save to MongoDB' });
   }
 }
