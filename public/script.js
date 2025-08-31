@@ -123,7 +123,7 @@ if (currentSet === 'favorites') {
       <img src="${item.title_img}" alt="${item.title}">
       <div class="info">
         <div>${item.title}</div>
-        ${item.rawUrl ? `<button class="view-set-btn" data-raw="${item.rawUrl}" data-title="${item.title}" data-img="${item.title_img}">View Set</button>` : ""}
+        ${item.rawUrl ? `<button class="view-set-btn" data-gist-url="${item.rawUrl}" data-title="${item.title}" data-img="${item.title_img}">View Set</button>` : ""}
       </div>
     `;
 
@@ -466,20 +466,20 @@ async function loadCollection(gistUrl, title, titleImg) {
         const card = document.createElement("div");
         card.className = "card";
 card.innerHTML = `
-  <img src="${col.title_img}" alt="${col.title}">
-  <h3>${col.title}</h3>
+  <img src="${item.title_img}" alt="${item.title}">
+  <h3>${item.title}</h3>
   <button 
     class="open-slideshow-btn" 
-    data-gist-url="${col.rawUrl}" 
-    data-title="${col.title}" 
-    data-title-img="${col.title_img}">
+    data-gist-url="${item.rawUrl}" 
+    data-title="${item.title}" 
+    data-title-img="${item.title_img}">
     Open Slideshow
   </button>
   <button 
     class="view-set-btn" 
-    data-gist-url="${col.rawUrl}" 
-    data-title="${col.title}" 
-    data-title-img="${col.title_img}">
+    data-gist-url="${item.rawUrl}" 
+    data-title="${item.title}" 
+    data-title-img="${item.title_img}">
     View Set
   </button>
 `;
