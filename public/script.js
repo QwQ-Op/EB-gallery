@@ -26,10 +26,8 @@ let currentSet = 'favorites';
 
 const API_ADD = "/api/addFavorite";
 const API_GET = "/api/getFavorites";
-const API_DELETE = "/api/deleteFavorites"; // ✅ new API for deletion
+const API_DELETE = "/api/deleteFavorites";
 
-
-// Show the form
 addFavBtn.addEventListener("click", () => {
     overlay.style.display = "flex";
 });
