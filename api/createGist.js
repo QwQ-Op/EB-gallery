@@ -48,7 +48,6 @@ export default async function handler(req, res) {
     const rawUrl = response.data.files[fileName].raw_url;
 
     // Step 3: Store in MongoDB
-    if (saveToMongo) {
       await client.connect();
       const database = client.db('favsDB'); // your DB
       const collection = database.collection('collections');
@@ -66,7 +65,7 @@ export default async function handler(req, res) {
       });
 
       console.log(`Saved to Mongo: ${title}`);
-    }
+    
 
     // Step 4: Return raw URL
     return res.status(200).json({ rawUrl });
