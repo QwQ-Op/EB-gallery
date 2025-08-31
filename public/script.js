@@ -217,10 +217,7 @@ gallery.addEventListener("click", async (e) => {
   // 📂 Render whole set (like favourites page render)
   if (e.target.classList.contains("view-set-btn")) {
     const gistUrl = e.target.getAttribute("data-gist-url");
-    const title = e.target.getAttribute("data-title");
-    const titleImg = e.target.getAttribute("data-title-img");
-
-  await renderCollection(gistUrl, title, titleImg);
+  await renderCollection(gistUrl);
   }
 });
 
@@ -499,25 +496,31 @@ gallery.querySelectorAll(".view-set-btn").forEach(btn => {
   });
 });
 
-async function renderCollection(gistUrl, title, titleImg) {
+
+async function renderCollection(gistUrl) {
   try {
     const res = await fetch(gistUrl);
     const data = await res.json();
 
-    gallery.innerHTML = `
-      <div class="collection-header">
-        <h2>${title}</h2>
-        <img src="${titleImg}" alt="${title}" style="max-height:80px; border-radius:8px; margin-left:10px;">
-      </div>
+    // update page title
+    pageTitle.innerHTML = `
+      <img src="${data.title_img}" alt="${data.title}" 
+           style="height:50px;width:50px;border-radius:8px;margin-right:10px;" />
+      ${data.title}
     `;
 
-    data.content.forEach(item => {
+    gallery.innerHTML = "";
+    galleryData = data.content; // so slideshow works same as favourites
+
+    data.content.forEach((item, index) => {
       const card = document.createElement("div");
       card.className = "card";
       card.innerHTML = `
         <img src="${item.cover}" alt="${item.model}">
-        <p>${item.model}</p>
-        <a href="${item.photoset}" target="_blank">View Set</a>
+        <div class="info">
+          <div>${item.model}</div>
+          ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
+        </div>
       `;
       gallery.appendChild(card);
     });
