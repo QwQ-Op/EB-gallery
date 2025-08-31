@@ -88,7 +88,16 @@ async function loadGallery() {
         } else {
             console.error('Failed to fetch favorites data');
         }
+    } else if (currentSet === 'collections') {
+    console.log('Loading collections...');
+    const res = await fetch('/api/getCollections');
+    if (res.ok) {
+        data = await res.json();
+    } else {
+        console.error('Failed to fetch collections data');
     }
+}
+
 
     // Render the gallery based on the fetched data
     galleryData = data;
@@ -100,14 +109,31 @@ async function loadGallery() {
     data.forEach((item, index) => {
         const card = document.createElement("div");
         card.className = "card";
-        card.innerHTML = `
-      ${currentSet === 'favorites' ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` : ""}
+if (currentSet === 'favorites') {
+    // your existing favorite card code
+    card.innerHTML = `
+      <input type="checkbox" class="delete-checkbox" data-index="${index}">
       <img src="${item.cover}" alt="${item.model}">
       <div class="info">
         <div>${item.model}</div>
         ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
       </div>
     `;
+} else if (currentSet === 'collections') {
+    card.dataset.index = index; // store index so we can click later
+    card.innerHTML = `
+      <img src="${item.title_img}" alt="${item.title}">
+      <div class="info">
+        <div>${item.title}</div>
+        ${item.collection_url ? `<a href="${item.collection_url}" target="_blank" class="view-set-btn">Source</a>` : ""}
+      </div>
+    `;
+
+    // 👇 This makes the collection open
+    card.addEventListener("click", () => {
+        loadCollection(item.rawUrl, item.title, item.title_img);
+    });
+}
         gallery.appendChild(card);
     });
 }
@@ -401,3 +427,36 @@ document.querySelectorAll(".set-toggle .btn").forEach(button => {
         }
     });
 });
+
+async function loadCollection(gistUrl, title, titleImg) {
+    // Fetch the collection JSON from raw gist url
+    const res = await fetch(gistUrl);
+    if(!res.ok) {
+        console.error("Failed to fetch collection data");
+        return;
+    }
+    const data = await res.json();
+
+    // Set page title + thumbnail
+    document.title = title;
+    const pageHeader = document.getElementById("page-header");
+    pageHeader.innerHTML = `
+        <img src="${titleImg}" alt="${title}" style="height:40px; margin-right:8px;">
+        <span>${title}</span>
+    `;
+
+    // Clear and render gallery
+    gallery.innerHTML = "";
+    data.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <img src="${item.cover}" alt="${item.model}">
+            <div class="info">
+                <div>${item.model}</div>
+                ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
+            </div>
+        `;
+        gallery.appendChild(card);
+    });
+}
