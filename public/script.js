@@ -206,6 +206,22 @@ gallery.addEventListener("click", e => {
         const idx = Array.from(gallery.querySelectorAll(".card img")).indexOf(e.target);
         if(idx >= 0) openSlideshow(idx);
     }
+
+  if (e.target.classList.contains("open-slideshow-btn")) {
+    const gistUrl = e.target.getAttribute("data-gist-url");
+    const res = await fetch(gistUrl);
+    const data = await res.json();
+    openSlideshow(data.content);  // reuse your favourites slideshow function
+  }
+
+  // 📂 Render whole set (like favourites page render)
+  if (e.target.classList.contains("view-set-btn")) {
+    const gistUrl = e.target.getAttribute("data-gist-url");
+    const title = e.target.getAttribute("data-title");
+    const titleImg = e.target.getAttribute("data-title-img");
+
+    renderCollection(gistUrl, title, titleImg);
+  }
 });
 
 function openSlideshow(idx) {
@@ -449,13 +465,25 @@ async function loadCollection(gistUrl, title, titleImg) {
     data.forEach(item => {
         const card = document.createElement("div");
         card.className = "card";
-        card.innerHTML = `
-            <img src="${item.cover}" alt="${item.model}">
-            <div class="info">
-                <div>${item.model}</div>
-                ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
-            </div>
-        `;
+card.innerHTML = `
+  <img src="${col.title_img}" alt="${col.title}">
+  <h3>${col.title}</h3>
+  <button 
+    class="open-slideshow-btn" 
+    data-gist-url="${col.gist_raw_url}" 
+    data-title="${col.title}" 
+    data-title-img="${col.title_img}">
+    Open Slideshow
+  </button>
+  <button 
+    class="view-set-btn" 
+    data-gist-url="${col.gist_raw_url}" 
+    data-title="${col.title}" 
+    data-title-img="${col.title_img}">
+    View Set
+  </button>
+`;
+
         gallery.appendChild(card);
     });
 }
@@ -470,3 +498,30 @@ gallery.querySelectorAll(".view-set-btn").forEach(btn => {
     loadCollection(raw, title, img);
   });
 });
+
+async function renderCollection(gistUrl, title, titleImg) {
+  try {
+    const res = await fetch(gistUrl);
+    const data = await res.json();
+
+    gallery.innerHTML = `
+      <div class="collection-header">
+        <h2>${title}</h2>
+        <img src="${titleImg}" alt="${title}" style="max-height:80px; border-radius:8px; margin-left:10px;">
+      </div>
+    `;
+
+    data.content.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <img src="${item.cover}" alt="${item.model}">
+        <p>${item.model}</p>
+        <a href="${item.photoset}" target="_blank">View Set</a>
+      `;
+      gallery.appendChild(card);
+    });
+  } catch (err) {
+    console.error("Error rendering collection:", err);
+  }
+}
