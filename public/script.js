@@ -62,44 +62,44 @@ async function loadGallery() {
 
     let data = [];
 
-    if(currentSet === 'json1') {
+    if (currentSet === 'json1') {
         console.log('Loading JSON1 data...');
         const res = await fetch('/api/fetchJson?set=json1');
-        if(res.ok) {
+        if (res.ok) {
             data = await res.json();
         } else {
             console.error('Failed to fetch JSON1 data');
         }
-    } else if(currentSet === 'json2') {
+    } else if (currentSet === 'json2') {
         console.log('Loading JSON2 data...');
         const res = await fetch('/api/fetchJson?set=json2');
-        if(res.ok) {
+        if (res.ok) {
             data = await res.json();
         } else {
             console.error('Failed to fetch JSON2 data');
         }
-    } else if(currentSet === 'favorites') {
+    } else if (currentSet === 'favorites') {
         console.log('Loading favorites...');
         const res = await fetch('/api/getFavorites');
-        if(res.ok) {
+        if (res.ok) {
             data = await res.json();
         } else {
             console.error('Failed to fetch favorites data');
         }
     } else if (currentSet === 'collections') {
-    console.log('Loading collections...');
-    const res = await fetch('/api/getCollections');
-    if (res.ok) {
-        data = await res.json();
-    } else {
-        console.error('Failed to fetch collections data');
+        console.log('Loading collections...');
+        const res = await fetch('/api/getCollections');
+        if (res.ok) {
+            data = await res.json();
+        } else {
+            console.error('Failed to fetch collections data');
+        }
     }
-}
 
 
     // Render the gallery based on the fetched data
     galleryData = data;
-    if(data.length === 0) {
+    if (data.length === 0) {
         gallery.innerHTML = "<p>No items found in this category.</p>";
         return;
     }
@@ -107,9 +107,9 @@ async function loadGallery() {
     data.forEach((item, index) => {
         const card = document.createElement("div");
         card.className = "card";
-if (currentSet === 'favorites') {
-    // your existing favorite card code
-    card.innerHTML = `
+
+        if (currentSet === 'favorites') {
+            card.innerHTML = `
       <input type="checkbox" class="delete-checkbox" data-index="${index}">
       <img src="${item.cover}" alt="${item.model}">
       <div class="info">
@@ -117,23 +117,20 @@ if (currentSet === 'favorites') {
         ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
       </div>
     `;
-} else if (currentSet === 'collections') {
-    card.dataset.index = index; // store index so we can click later
-    card.innerHTML = `
+        } else if (currentSet === 'collections') {
+            card.innerHTML = `
       <img src="${item.title_img}" alt="${item.title}">
       <div class="info">
         <div>${item.title}</div>
-        ${item.rawUrl ? `<button class="view-set-btn" data-gist-url="${item.rawUrl}" data-title="${item.title}" data-img="${item.title_img}">View Set</button>` : ""}
+        ${item.collection_url ? `<a href="${item.collection_url}" target="_blank">Source</a>` : ""}
+        ${item.rawUrl ? `<button class="view-set-btn" data-gist-url="${item.rawUrl}">View Set</button>` : ""}
       </div>
     `;
+        }
 
-    // 👇 This makes the collection open
-    card.addEventListener("click", async () => {
-        await loadCollection(item.rawUrl, item.title, item.title_img);
-    });
-}
         gallery.appendChild(card);
     });
+
 }
 
 loadGallery();
@@ -144,7 +141,7 @@ submitBtn.addEventListener("click", async () => {
     const cover = coverInput.value.trim();
     const photoset = photosetInput.value.trim();
 
-    if(!model || !cover || !photoset) {
+    if (!model || !cover || !photoset) {
         alert("Please fill all fields");
         return;
     }
@@ -163,7 +160,7 @@ submitBtn.addEventListener("click", async () => {
         });
 
         const data = await res.json();
-        if(!res.ok) throw new Error(data.message || "Failed to save favorite");
+        if (!res.ok) throw new Error(data.message || "Failed to save favorite");
 
         overlay.style.display = "none";
         modelInput.value = coverInput.value = photosetInput.value = "";
@@ -179,9 +176,9 @@ deleteSelectedBtn.addEventListener("click", async () => {
         .filter(cb => cb.checked)
         .map(cb => parseInt(cb.dataset.index));
 
-    if(selected.length === 0) return alert("Select at least one favorite");
+    if (selected.length === 0) return alert("Select at least one favorite");
 
-    if(!confirm(`Delete ${selected.length} favorite(s)?`)) return;
+    if (!confirm(`Delete ${selected.length} favorite(s)?`)) return;
 
     try {
         const res = await fetch(API_DELETE, {
@@ -193,7 +190,7 @@ deleteSelectedBtn.addEventListener("click", async () => {
                 indexes: selected
             })
         });
-        if(!res.ok) throw new Error("Failed to delete favorites");
+        if (!res.ok) throw new Error("Failed to delete favorites");
         loadGallery();
     } catch (err) {
         alert(err.message);
@@ -202,23 +199,23 @@ deleteSelectedBtn.addEventListener("click", async () => {
 
 // Slideshow open on click
 gallery.addEventListener("click", async (e) => {
-    if(e.target.tagName === "IMG" && !deleteMode) {
+    if (e.target.tagName === "IMG" && !deleteMode) {
         const idx = Array.from(gallery.querySelectorAll(".card img")).indexOf(e.target);
-        if(idx >= 0) openSlideshow(idx);
+        if (idx >= 0) openSlideshow(idx);
     }
 
-  if (e.target.classList.contains("open-slideshow-btn")) {
-    const gistUrl = e.target.getAttribute("data-gist-url");
-    const res = await fetch(gistUrl);
-    const data = await res.json();
-    openSlideshow(data.content);  // reuse your favourites slideshow function
-  }
+    if (e.target.classList.contains("open-slideshow-btn")) {
+        const gistUrl = e.target.getAttribute("data-gist-url");
+        const res = await fetch(gistUrl);
+        const data = await res.json();
+        openSlideshow(data.content); // reuse your favourites slideshow function
+    }
 
-  // 📂 Render whole set (like favourites page render)
-  if (e.target.classList.contains("view-set-btn")) {
-    const gistUrl = e.target.getAttribute("data-gist-url");
-  await renderCollection(gistUrl);
-  }
+    // 📂 Render whole set (like favourites page render)
+    if (e.target.classList.contains("view-set-btn")) {
+        const gistUrl = e.target.getAttribute("data-gist-url");
+        await renderCollection(gistUrl);
+    }
 });
 
 function openSlideshow(idx) {
@@ -242,7 +239,7 @@ closeSlideBtn.addEventListener("click", () => {
 // --- Tap-to-navigate slideshow ---
 slideshowOverlay.addEventListener("click", (e) => {
     // ✅ Ignore taps on the image itself or control buttons
-    if(
+    if (
         e.target === slideshowImg ||
         e.target.closest("button") ||
         e.target.closest("a")
@@ -253,7 +250,7 @@ slideshowOverlay.addEventListener("click", (e) => {
     const rect = slideshowOverlay.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
 
-    if(clickX < rect.width / 2) {
+    if (clickX < rect.width / 2) {
         // Left half → Previous
         currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
     } else {
@@ -275,7 +272,7 @@ slideshowImg.style.transition = "transform 0.2s ease"; // smooth zoom
 
 // Double tap / double click to zoom
 slideshowImg.addEventListener("dblclick", () => {
-    if(!isZoomed) {
+    if (!isZoomed) {
         slideshowImg.style.transform = "scale(2)";
         isZoomed = true;
     } else {
@@ -287,7 +284,7 @@ slideshowImg.addEventListener("dblclick", () => {
 
 // Pan (drag) when zoomed in (mouse)
 slideshowImg.addEventListener("mousedown", (e) => {
-    if(!isZoomed) return;
+    if (!isZoomed) return;
     startX = e.clientX - currentX;
     startY = e.clientY - currentY;
 
@@ -308,29 +305,29 @@ slideshowImg.addEventListener("mousedown", (e) => {
 
 // Pan (drag) when zoomed in (touch)
 slideshowImg.addEventListener("touchstart", (e) => {
-    if(!isZoomed) return;
+    if (!isZoomed) return;
     const touch = e.touches[0];
     startX = touch.clientX - currentX;
     startY = touch.clientY - currentY;
 
-// Existing button hide logic for json1/json2 toggle
-document.getElementById("set-toggle-btn").addEventListener("click", (e) => {
-    const targetSet = e.target.dataset.set;
+    // Existing button hide logic for json1/json2 toggle
+    document.getElementById("set-toggle-btn").addEventListener("click", (e) => {
+        const targetSet = e.target.dataset.set;
 
-    if (targetSet && targetSet !== currentSet) {
-        currentSet = targetSet;
-        loadGallery(); // Reload gallery based on the selected set
-    }
+        if (targetSet && targetSet !== currentSet) {
+            currentSet = targetSet;
+            loadGallery(); // Reload gallery based on the selected set
+        }
 
-    // Hide Add to Favorites and Delete Favorites when json1 or json2 is selected
-    if (targetSet === "json1" || targetSet === "json2") {
-        document.getElementById("addFavBtn").style.display = "none";
-        document.getElementById("deleteModeBtn").style.display = "none";
-    } else {
-        document.getElementById("addFavBtn").style.display = "block";
-        document.getElementById("deleteModeBtn").style.display = "block";
-    }
-});
+        // Hide Add to Favorites and Delete Favorites when json1 or json2 is selected
+        if (targetSet === "json1" || targetSet === "json2") {
+            document.getElementById("addFavBtn").style.display = "none";
+            document.getElementById("deleteModeBtn").style.display = "none";
+        } else {
+            document.getElementById("addFavBtn").style.display = "block";
+            document.getElementById("deleteModeBtn").style.display = "block";
+        }
+    });
 
     function onTouchMove(ev) {
         const t = ev.touches[0];
@@ -362,17 +359,17 @@ function updateSlide() {
 }
 
 function updateTitle(set) {
-  let newTitle = "💫⭐ My Favorites ⭐💫";
-  if (set === "json1") newTitle = "🍑 Cute Butts 🍑";
-  if (set === "json2") newTitle = "😻 Innie Pussies 😻";
-  if (set === "json2") newTitle = "📚 Collections 📚";
+    let newTitle = "💫⭐ My Favorites ⭐💫";
+    if (set === "json1") newTitle = "🍑 Cute Butts 🍑";
+    if (set === "json2") newTitle = "😻 Innie Pussies 😻";
+    if (set === "json2") newTitle = "📚 Collections 📚";
 
-  // Fade out → change → fade in
-  pageTitle.classList.add("fade-out");
-  setTimeout(() => {
-    pageTitle.textContent = newTitle;
-    pageTitle.classList.remove("fade-out");
-  }, 400);
+    // Fade out → change → fade in
+    pageTitle.classList.add("fade-out");
+    setTimeout(() => {
+        pageTitle.textContent = newTitle;
+        pageTitle.classList.remove("fade-out");
+    }, 400);
 }
 
 // --- Simple password gate ---
@@ -389,7 +386,7 @@ async function checkPassword() {
     });
     const data = await res.json();
 
-    if(data.success) {
+    if (data.success) {
         document.getElementById("lock-screen").style.display = "none";
         document.getElementById("app").style.display = "block";
     } else {
@@ -400,7 +397,7 @@ async function checkPassword() {
 document.getElementById("login-btn").addEventListener("click", checkPassword);
 
 // Auto-login if already authenticated
-if(localStorage.getItem("auth") === "true") {
+if (localStorage.getItem("auth") === "true") {
     document.getElementById("lock-screen").style.display = "none";
     document.getElementById("app").style.display = "block";
 }
@@ -411,18 +408,18 @@ const favControls = document.getElementById("fav-controls");
 document.querySelectorAll(".set-toggle .btn").forEach(button => {
     button.addEventListener("click", (e) => {
         const targetSet = e.target.dataset.set;
-        if(targetSet && targetSet !== currentSet) {
-             currentSet = targetSet;
-  updateTitle(currentSet); // 🔥 animate title change
-  loadGallery().then(() => {
-    gallery.classList.remove("fade-out");
-  });
+        if (targetSet && targetSet !== currentSet) {
+            currentSet = targetSet;
+            updateTitle(currentSet); // 🔥 animate title change
+            loadGallery().then(() => {
+                gallery.classList.remove("fade-out");
+            });
             // highlight active button
             document.querySelectorAll(".set-toggle .btn").forEach(b => b.classList.remove("active"));
             e.target.classList.add("active");
 
             // ✅ Animate controls
-            if(targetSet === "favorites") {
+            if (targetSet === "favorites") {
                 favControls.classList.remove("hidden");
             } else {
                 favControls.classList.add("hidden");
@@ -443,7 +440,7 @@ document.querySelectorAll(".set-toggle .btn").forEach(button => {
 async function loadCollection(gistUrl, title, titleImg) {
     // Fetch the collection JSON from raw gist url
     const res = await fetch(gistUrl);
-    if(!res.ok) {
+    if (!res.ok) {
         console.error("Failed to fetch collection data");
         return;
     }
@@ -462,7 +459,7 @@ async function loadCollection(gistUrl, title, titleImg) {
     data.forEach(item => {
         const card = document.createElement("div");
         card.className = "card";
-card.innerHTML = `
+        card.innerHTML = `
   <img src="${item.title_img}" alt="${item.title}">
   <h3>${item.title}</h3>
   <button 
@@ -487,44 +484,44 @@ card.innerHTML = `
 
 // Attach click for "View Set" buttons
 gallery.querySelectorAll(".view-set-btn").forEach(btn => {
-  btn.addEventListener("click", e => {
-    e.stopPropagation(); // prevent triggering the card click
-    const raw = btn.dataset.raw;
-    const title = btn.dataset.title;
-    const img = btn.dataset.img;
-    loadCollection(raw, title, img);
-  });
+    btn.addEventListener("click", e => {
+        e.stopPropagation(); // prevent triggering the card click
+        const raw = btn.dataset.raw;
+        const title = btn.dataset.title;
+        const img = btn.dataset.img;
+        loadCollection(raw, title, img);
+    });
 });
 
 
 async function renderCollection(gistUrl) {
-  try {
-    const res = await fetch(gistUrl);
-    const data = await res.json();
+    try {
+        const res = await fetch(gistUrl);
+        const data = await res.json();
 
-    // update page title
-    pageTitle.innerHTML = `
+        // update page title
+        pageTitle.innerHTML = `
       <img src="${data.title_img}" alt="${data.title}" 
            style="height:50px;width:50px;border-radius:8px;margin-right:10px;" />
       ${data.title}
     `;
 
-    gallery.innerHTML = "";
-    galleryData = data.content; // so slideshow works same as favourites
+        gallery.innerHTML = "";
+        galleryData = data.content; // so slideshow works same as favourites
 
-    data.content.forEach((item, index) => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
+        data.content.forEach((item, index) => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
         <img src="${item.cover}" alt="${item.model}">
         <div class="info">
           <div>${item.model}</div>
           ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
         </div>
       `;
-      gallery.appendChild(card);
-    });
-  } catch (err) {
-    console.error("Error rendering collection:", err);
-  }
+            gallery.appendChild(card);
+        });
+    } catch (err) {
+        console.error("Error rendering collection:", err);
+    }
 }
