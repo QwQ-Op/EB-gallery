@@ -220,7 +220,7 @@ gallery.addEventListener("click", async (e) => {
     const title = e.target.getAttribute("data-title");
     const titleImg = e.target.getAttribute("data-title-img");
 
-    renderCollection(gistUrl, title, titleImg);
+  await renderCollection(gistUrl, title, titleImg);
   }
 });
 
