@@ -494,7 +494,7 @@ gallery.innerHTML = "";
         document.getElementById("collection-img").src = collectionImg || "";
         document.getElementById("collection-title").textContent = collectionTitle || "Collection";
         document.getElementById("collection-description").textContent = collectionDescription || "";
-        document.getElementById("collection-link").href = collectionUrl || "#";
+        document.getElementById("collection-link").href = collectionUrl || "https://google.com";
         collectionHeader.classList.remove("hidden");
 
         // Save data globally for slideshow
