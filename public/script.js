@@ -121,6 +121,7 @@ async function loadGallery() {
     `;
         } else if(currentSet === 'collections') {
             card.innerHTML = `
+ ${deleteMode ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` : ""}
       <img src="${item.title_img}" alt="${item.title}">
       <div class="info">
         <div>${item.title}</div>
@@ -178,26 +179,36 @@ deleteSelectedBtn.addEventListener("click", async () => {
         .filter(cb => cb.checked)
         .map(cb => parseInt(cb.dataset.index));
 
-    if(selected.length === 0) return alert("Select at least one favorite");
+    if(selected.length === 0) return alert("Select at least one item");
 
-    if(!confirm(`Delete ${selected.length} favorite(s)?`)) return;
+    if(!confirm(`Delete ${selected.length} item(s)?`)) return;
 
     try {
-        const res = await fetch(API_DELETE, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                indexes: selected
-            })
-        });
-        if(!res.ok) throw new Error("Failed to delete favorites");
-        loadGallery();
+        if(currentSet === "favorites") {
+            const res = await fetch(API_DELETE, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ indexes: selected })
+            });
+            if(!res.ok) throw new Error("Failed to delete favorites");
+        } else if(currentSet === "collections") {
+            // Map indexes → gistIds
+            const gistIds = selected.map(i => galleryData[i].gistId);
+
+            const res = await fetch("/api/deleteGist", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ gistIds })
+            });
+            if(!res.ok) throw new Error("Failed to delete collections");
+        }
+
+        loadGallery(); // reload
     } catch (err) {
         alert(err.message);
     }
 });
+
 
 // Slideshow open on click
 gallery.addEventListener("click", async (e) => {
