@@ -124,7 +124,16 @@ async function loadGallery() {
       <div class="info">
         <div>${item.title}</div>
         ${item.collection_url ? `<a href="${item.collection_url}" target="_blank">Source</a>` : ""}
-        ${item.rawUrl ? `<button class="view-set-btn" data-gist-url="${item.rawUrl}">View Set</button>` : ""}
+  ${item.rawUrl ? `
+            <button 
+              class="view-set-btn" 
+              data-gist-url="${item.rawUrl}" 
+              data-title="${item.title}" 
+              data-img="${item.title_img}" 
+              data-description="${item.description}" 
+              data-url="${item.collection_url}">
+              View Set
+            </button>` : ""}
       </div>
     `;
         }
@@ -225,7 +234,11 @@ gallery.addEventListener("click", async (e) => {
 
     // 📂 Render whole set (like favourites page render)
     if(e.target.classList.contains("view-set-btn")) {
-        const gistUrl = e.target.getAttribute("data-gist-url");
+     const gistUrl = e.target.dataset.gistUrl;
+    const title = e.target.dataset.title;
+    const img = e.target.dataset.img;
+    const desc = e.target.dataset.description;
+    const url = e.target.dataset.url;
         await renderCollection(gistUrl);
     }
 });
@@ -478,6 +491,12 @@ gallery.innerHTML = "";
         const imgElem = document.getElementById("page-image");
         if(titleElem) titleElem.textContent = collectionTitle || "Collection";
         if(imgElem) imgElem.src = collectionImg || "";
+        // Update header
+        document.getElementById("collection-header").classList.remove("hidden");
+        document.getElementById("collection-img").src = collectionImg || "";
+        document.getElementById("collection-title").textContent = collectionTitle || "Collection";
+        document.getElementById("collection-description").textContent = collectionDescription || "";
+        document.getElementById("collection-link").href = collectionUrl || "#";
 
         // Save data globally for slideshow
         galleryData = data.content;
