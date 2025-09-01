@@ -1,4 +1,4 @@
-// DOM elements
+hidden// DOM elements
 const gallery = document.getElementById("gallery");
 const addFavBtn = document.getElementById("add-fav-btn");
 const overlay = document.getElementById("overlay");
@@ -435,6 +435,8 @@ document.querySelectorAll(".set-toggle .btn").forEach(button => {
 
             // ✅ Animate controls
             if(targetSet === "favorites") {
+                favControls.classList.remove("hidden");
+            } else if (targetSet === "collections") {
                 favControls.classList.remove("hidden");
             } else {
                 favControls.classList.add("hidden");
