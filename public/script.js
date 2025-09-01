@@ -21,6 +21,12 @@ const pageTitle = document.getElementById("page-title");
 
 let deleteMode = false;
 let galleryData = [];
+let galleryCache = {
+  favorites: null,
+  collections: null,
+  json1: null,
+  json2: null
+};
 let currentIndex = 0;
 let currentSet = 'favorites';
 
@@ -64,42 +70,32 @@ async function loadGallery() {
 
     gallery.innerHTML = ""; // Clear the gallery
 
-    let data = [];
+    let data = galleryCache[currentSet]; // check cache first
 
-    if(currentSet === 'json1') {
-        console.log('Loading JSON1 data...');
-        const res = await fetch('/api/fetchJson?set=json1');
-        if(res.ok) {
-            data = await res.json();
-        } else {
-            console.error('Failed to fetch JSON1 data');
+     if (!data) {
+        // not cached → fetch
+        try {
+            if(currentSet === 'json1') {
+                const res = await fetch('/api/fetchJson?set=json1');
+                data = res.ok ? await res.json() : [];
+            } else if(currentSet === 'json2') {
+                const res = await fetch('/api/fetchJson?set=json2');
+                data = res.ok ? await res.json() : [];
+            } else if(currentSet === 'favorites') {
+                const res = await fetch('/api/getFavorites');
+                data = res.ok ? await res.json() : [];
+            } else if(currentSet === 'collections') {
+                const res = await fetch('/api/getCollections');
+                data = res.ok ? await res.json() : [];
+            }
+        } catch (err) {
+            console.error("Failed to fetch data:", err);
+            data = [];
         }
-    } else if(currentSet === 'json2') {
-        console.log('Loading JSON2 data...');
-        const res = await fetch('/api/fetchJson?set=json2');
-        if(res.ok) {
-            data = await res.json();
-        } else {
-            console.error('Failed to fetch JSON2 data');
-        }
-    } else if(currentSet === 'favorites') {
-        console.log('Loading favorites...');
-        const res = await fetch('/api/getFavorites');
-        if(res.ok) {
-            data = await res.json();
-        } else {
-            console.error('Failed to fetch favorites data');
-        }
-    } else if(currentSet === 'collections') {
-        console.log('Loading collections...');
-        const res = await fetch('/api/getCollections');
-        if(res.ok) {
-            data = await res.json();
-        } else {
-            console.error('Failed to fetch collections data');
-        }
+
+        // store in cache
+        galleryCache[currentSet] = data;
     }
-
 
     // Render the gallery based on the fetched data
     galleryData = data;
