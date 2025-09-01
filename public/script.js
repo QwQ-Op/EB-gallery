@@ -242,7 +242,7 @@ gallery.addEventListener("click", async (e) => {
     const img = e.target.dataset.img;
     const desc = e.target.dataset.description;
     const url = e.target.dataset.url;
-        await renderCollection(gistUrl);
+        await renderCollection(gistUrl,title,img,desc,url);
     }
 });
 
@@ -481,7 +481,7 @@ gallery.querySelectorAll(".view-set-btn").forEach(btn => {
     });
 });
 
-async function renderCollection(gistUrl, collectionTitle, collectionImg) {
+async function renderCollection(gistUrl, collectionTitle, collectionImg, collectionDescription, collectionUrl) {
     console.log("renderCollections called");
 
 gallery.innerHTML = "";
