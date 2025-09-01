@@ -60,6 +60,8 @@ async function fetchJsonData(url) {
 async function loadGallery() {
   console.log("✅ loadGallery called for", currentSet); // DEBUG
 
+    const thisSet = currentSet; // snapshot
+
     gallery.innerHTML = ""; // Clear the gallery
 
     let data = [];
@@ -133,6 +135,7 @@ async function loadGallery() {
 
         gallery.appendChild(card);
     });
+    if (thisSet !== currentSet) return;
 
 }
 
