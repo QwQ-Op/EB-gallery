@@ -500,3 +500,10 @@ gallery.innerHTML = "";
         console.error("Error rendering collection:", err);
     }
 }
+
+document.getElementById("reload-btn").addEventListener("click", () => {
+    // Clear only the current set from cache
+galleryCache = { favorites: null, collections: null, json1: null, json2: null };
+console.log("♻️ Reloading", currentSet);
+loadGallery(); // refetch fresh data
+});
