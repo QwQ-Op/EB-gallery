@@ -19,6 +19,9 @@ const closeSlideBtn = document.getElementById("close-slide-btn");
 
 const pageTitle = document.getElementById("page-title");
 
+const collectionHeader = document.getElementById("collection-header");
+collectionHeader.classList.add("hidden"); 
+
 let deleteMode = false;
 let galleryData = [];
 let galleryCache = {
@@ -450,6 +453,7 @@ document.querySelectorAll(".set-toggle .btn").forEach(button => {
                 favControls.classList.remove("hidden");
             } else if (targetSet === "collections") {
                 favControls.classList.remove("hidden");
+collectionHeader.classList.add("hidden");
             } else {
                 favControls.classList.add("hidden");
             }
@@ -492,11 +496,12 @@ gallery.innerHTML = "";
         if(titleElem) titleElem.textContent = collectionTitle || "Collection";
         if(imgElem) imgElem.src = collectionImg || "";
         // Update header
-        document.getElementById("collection-header").classList.remove("hidden");
+
         document.getElementById("collection-img").src = collectionImg || "";
         document.getElementById("collection-title").textContent = collectionTitle || "Collection";
         document.getElementById("collection-description").textContent = collectionDescription || "";
         document.getElementById("collection-link").href = collectionUrl || "#";
+        collectionHeader.classList.remove("hidden");
 
         // Save data globally for slideshow
         galleryData = data.content;
