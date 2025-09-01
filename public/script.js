@@ -1,4 +1,4 @@
-hidden// DOM elements
+// DOM elements
 const gallery = document.getElementById("gallery");
 const addFavBtn = document.getElementById("add-fav-btn");
 const overlay = document.getElementById("overlay");
