@@ -380,7 +380,7 @@ function updateTitle(set) {
     let newTitle = "💫⭐ My Favorites ⭐💫";
     if(set === "json1") newTitle = "🍑 Cute Butts 🍑";
     if(set === "json2") newTitle = "😻 Innie Pussies 😻";
-    if(set === "json2") newTitle = "📚 Collections 📚";
+    if(set === "collections") newTitle = "📚 Collections 📚";
 
     // Fade out → change → fade in
     pageTitle.classList.add("fade-out");
@@ -434,7 +434,7 @@ document.querySelectorAll(".set-toggle .btn").forEach(button => {
             e.target.classList.add("active");
 
             // ✅ Animate controls
-            if(targetSet === "favorites") {
+            if(targetSet === "favorites" || targetSet === "collections") {
                 favControls.classList.remove("hidden");
             } else {
                 favControls.classList.add("hidden");
