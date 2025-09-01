@@ -20,15 +20,15 @@ const closeSlideBtn = document.getElementById("close-slide-btn");
 const pageTitle = document.getElementById("page-title");
 
 const collectionHeader = document.getElementById("collection-header");
-collectionHeader.classList.add("hidden"); 
+collectionHeader.classList.add("hidden");
 
 let deleteMode = false;
 let galleryData = [];
 let galleryCache = {
-  favorites: null,
-  collections: null,
-  json1: null,
-  json2: null
+    favorites: null,
+    collections: null,
+    json1: null,
+    json2: null
 };
 let currentIndex = 0;
 let currentSet = 'favorites';
@@ -67,7 +67,7 @@ async function fetchJsonData(url) {
 }
 
 async function loadGallery() {
-  console.log("✅ loadGallery called for", currentSet); // DEBUG
+    console.log("✅ loadGallery called for", currentSet); // DEBUG
 
     const thisSet = currentSet; // snapshot
 
@@ -75,19 +75,19 @@ async function loadGallery() {
 
     let data = galleryCache[currentSet]; // check cache first
 
-     if (!data) {
+    if (!data) {
         // not cached → fetch
         try {
-            if(currentSet === 'json1') {
+            if (currentSet === 'json1') {
                 const res = await fetch('/api/fetchJson?set=json1');
                 data = res.ok ? await res.json() : [];
-            } else if(currentSet === 'json2') {
+            } else if (currentSet === 'json2') {
                 const res = await fetch('/api/fetchJson?set=json2');
                 data = res.ok ? await res.json() : [];
-            } else if(currentSet === 'favorites') {
+            } else if (currentSet === 'favorites') {
                 const res = await fetch('/api/getFavorites');
                 data = res.ok ? await res.json() : [];
-            } else if(currentSet === 'collections') {
+            } else if (currentSet === 'collections') {
                 const res = await fetch('/api/getCollections');
                 data = res.ok ? await res.json() : [];
             }
@@ -102,7 +102,7 @@ async function loadGallery() {
 
     // Render the gallery based on the fetched data
     galleryData = data;
-    if(data.length === 0) {
+    if (data.length === 0) {
         gallery.innerHTML = "<p>No items found in this category.</p>";
         return;
     }
@@ -111,7 +111,7 @@ async function loadGallery() {
         const card = document.createElement("div");
         card.className = "card";
 
-        if(currentSet === 'favorites') {
+        if (currentSet === 'favorites') {
             card.innerHTML = `
       <input type="checkbox" class="delete-checkbox" data-index="${index}">
       <img src="${item.cover}" alt="${item.model}">
@@ -120,7 +120,7 @@ async function loadGallery() {
         ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
       </div>
     `;
-        } else if(currentSet === 'collections') {
+        } else if (currentSet === 'collections') {
             card.innerHTML = `
  ${deleteMode ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` : ""}
       <img src="${item.title_img}" alt="${item.title}">
@@ -155,7 +155,7 @@ submitBtn.addEventListener("click", async () => {
     const cover = coverInput.value.trim();
     const photoset = photosetInput.value.trim();
 
-    if(!model || !cover || !photoset) {
+    if (!model || !cover || !photoset) {
         alert("Please fill all fields");
         return;
     }
@@ -174,7 +174,7 @@ submitBtn.addEventListener("click", async () => {
         });
 
         const data = await res.json();
-        if(!res.ok) throw new Error(data.message || "Failed to save favorite");
+        if (!res.ok) throw new Error(data.message || "Failed to save favorite");
 
         overlay.style.display = "none";
         modelInput.value = coverInput.value = photosetInput.value = "";
@@ -190,28 +190,36 @@ deleteSelectedBtn.addEventListener("click", async () => {
         .filter(cb => cb.checked)
         .map(cb => parseInt(cb.dataset.index));
 
-    if(selected.length === 0) return alert("Select at least one item");
+    if (selected.length === 0) return alert("Select at least one item");
 
-    if(!confirm(`Delete ${selected.length} item(s)?`)) return;
+    if (!confirm(`Delete ${selected.length} item(s)?`)) return;
 
     try {
-        if(currentSet === "favorites") {
+        if (currentSet === "favorites") {
             const res = await fetch(API_DELETE, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ indexes: selected })
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    indexes: selected
+                })
             });
-            if(!res.ok) throw new Error("Failed to delete favorites");
-        } else if(currentSet === "collections") {
+            if (!res.ok) throw new Error("Failed to delete favorites");
+        } else if (currentSet === "collections") {
             // Map indexes → gistIds
             const gistIds = selected.map(i => galleryData[i].gistId);
 
             const res = await fetch("/api/deleteGist", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ gistIds })
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    gistIds
+                })
             });
-            if(!res.ok) throw new Error("Failed to delete collections");
+            if (!res.ok) throw new Error("Failed to delete collections");
         }
 
         loadGallery(); // reload
@@ -223,12 +231,12 @@ deleteSelectedBtn.addEventListener("click", async () => {
 
 // Slideshow open on click
 gallery.addEventListener("click", async (e) => {
-    if(e.target.tagName === "IMG" && !deleteMode) {
+    if (e.target.tagName === "IMG" && !deleteMode) {
         const idx = Array.from(gallery.querySelectorAll(".card img")).indexOf(e.target);
-        if(idx >= 0) openSlideshow(idx);
+        if (idx >= 0) openSlideshow(idx);
     }
 
-    if(e.target.classList.contains("open-slideshow-btn")) {
+    if (e.target.classList.contains("open-slideshow-btn")) {
         const gistUrl = e.target.getAttribute("data-gist-url");
         const res = await fetch(gistUrl);
         const data = await res.json();
@@ -236,11 +244,17 @@ gallery.addEventListener("click", async (e) => {
     }
 
     // 📂 Render whole set (like favourites page render)
-    if(e.target.classList.contains("view-set-btn")) {
-  const { gistUrl, title, img, description, url } = e.target.dataset;
-  console.log("Datasets:", e.target.dataset);
+    if (e.target.classList.contains("view-set-btn")) {
+        const {
+            gistUrl,
+            title,
+            img,
+            description,
+            url
+        } = e.target.dataset;
+        console.log("Datasets:", e.target.dataset);
 
-  await renderCollection(gistUrl, title, img, description, url);
+        await renderCollection(gistUrl, title, img, description, url);
     }
 });
 
@@ -265,7 +279,7 @@ closeSlideBtn.addEventListener("click", () => {
 // --- Tap-to-navigate slideshow ---
 slideshowOverlay.addEventListener("click", (e) => {
     // ✅ Ignore taps on the image itself or control buttons
-    if(
+    if (
         e.target === slideshowImg ||
         e.target.closest("button") ||
         e.target.closest("a")
@@ -276,7 +290,7 @@ slideshowOverlay.addEventListener("click", (e) => {
     const rect = slideshowOverlay.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
 
-    if(clickX < rect.width / 2) {
+    if (clickX < rect.width / 2) {
         // Left half → Previous
         currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
     } else {
@@ -298,7 +312,7 @@ slideshowImg.style.transition = "transform 0.2s ease"; // smooth zoom
 
 // Double tap / double click to zoom
 slideshowImg.addEventListener("dblclick", () => {
-    if(!isZoomed) {
+    if (!isZoomed) {
         slideshowImg.style.transform = "scale(2)";
         isZoomed = true;
     } else {
@@ -310,7 +324,7 @@ slideshowImg.addEventListener("dblclick", () => {
 
 // Pan (drag) when zoomed in (mouse)
 slideshowImg.addEventListener("mousedown", (e) => {
-    if(!isZoomed) return;
+    if (!isZoomed) return;
     startX = e.clientX - currentX;
     startY = e.clientY - currentY;
 
@@ -331,7 +345,7 @@ slideshowImg.addEventListener("mousedown", (e) => {
 
 // Pan (drag) when zoomed in (touch)
 slideshowImg.addEventListener("touchstart", (e) => {
-    if(!isZoomed) return;
+    if (!isZoomed) return;
     const touch = e.touches[0];
     startX = touch.clientX - currentX;
     startY = touch.clientY - currentY;
@@ -340,13 +354,13 @@ slideshowImg.addEventListener("touchstart", (e) => {
     document.getElementById("set-toggle-btn").addEventListener("click", (e) => {
         const targetSet = e.target.dataset.set;
 
-        if(targetSet && targetSet !== currentSet) {
+        if (targetSet && targetSet !== currentSet) {
             currentSet = targetSet;
             loadGallery(); // Reload gallery based on the selected set
         }
 
         // Hide Add to Favorites and Delete Favorites when json1 or json2 is selected
-        if(targetSet === "json1" || targetSet === "json2") {
+        if (targetSet === "json1" || targetSet === "json2") {
             document.getElementById("addFavBtn").style.display = "none";
             document.getElementById("deleteModeBtn").style.display = "none";
         } else {
@@ -391,9 +405,9 @@ function updateSlide() {
 
 function updateTitle(set) {
     let newTitle = "💫⭐ My Favorites ⭐💫";
-    if(set === "json1") newTitle = "🍑 Cute Butts 🍑";
-    if(set === "json2") newTitle = "😻 Innie Pussies 😻";
-    if(set === "collections") newTitle = "📚 Collections 📚";
+    if (set === "json1") newTitle = "🍑 Cute Butts 🍑";
+    if (set === "json2") newTitle = "😻 Innie Pussies 😻";
+    if (set === "collections") newTitle = "📚 Collections 📚";
 
     // Fade out → change → fade in
     pageTitle.classList.add("fade-out");
@@ -417,7 +431,7 @@ async function checkPassword() {
     });
     const data = await res.json();
 
-    if(data.success) {
+    if (data.success) {
         document.getElementById("lock-screen").style.display = "none";
         document.getElementById("app").style.display = "block";
     } else {
@@ -428,7 +442,7 @@ async function checkPassword() {
 document.getElementById("login-btn").addEventListener("click", checkPassword);
 
 // Auto-login if already authenticated
-if(localStorage.getItem("auth") === "true") {
+if (localStorage.getItem("auth") === "true") {
     document.getElementById("lock-screen").style.display = "none";
     document.getElementById("app").style.display = "block";
 }
@@ -439,7 +453,7 @@ const favControls = document.getElementById("fav-controls");
 document.querySelectorAll(".set-toggle .btn").forEach(button => {
     button.addEventListener("click", (e) => {
         const targetSet = e.target.dataset.set;
-        if(targetSet && targetSet !== currentSet) {
+        if (targetSet && targetSet !== currentSet) {
             currentSet = targetSet;
             updateTitle(currentSet); // 🔥 animate title change
             // highlight active button
@@ -447,13 +461,15 @@ document.querySelectorAll(".set-toggle .btn").forEach(button => {
             e.target.classList.add("active");
 
             // ✅ Animate controls
-            if(targetSet === "favorites") {
+            if (targetSet === "favorites") {
                 favControls.classList.remove("hidden");
+                hideCollectionHeader();
             } else if (targetSet === "collections") {
                 favControls.classList.remove("hidden");
-collectionHeader.classList.add("hidden");
+                hideCollectionHeader();
             } else {
                 favControls.classList.add("hidden");
+                hideCollectionHeader();
             }
 
             // ✅ Animate gallery fade
@@ -482,7 +498,7 @@ gallery.querySelectorAll(".view-set-btn").forEach(btn => {
 async function renderCollection(gistUrl, collectionTitle, collectionImg, collectionDescription, collectionUrl) {
     console.log("renderCollections called");
 
-gallery.innerHTML = "";
+    gallery.innerHTML = "";
     try {
         // Fetch gist JSON
         const res = await fetch(gistUrl);
@@ -493,7 +509,7 @@ gallery.innerHTML = "";
         document.getElementById("collection-title").textContent = collectionTitle || "Collection";
         document.getElementById("collection-description").textContent = collectionDescription || "";
         document.getElementById("collection-link").href = collectionUrl || "https://google.com";
-                favControls.classList.add("hidden");
+        favControls.classList.add("hidden");
         collectionHeader.classList.remove("hidden");
 
         // Save data globally for slideshow
@@ -520,7 +536,18 @@ gallery.innerHTML = "";
 
 document.getElementById("reload-btn").addEventListener("click", () => {
     // Clear only the current set from cache
-galleryCache = { favorites: null, collections: null, json1: null, json2: null };
-console.log("♻️ Reloading", currentSet);
-loadGallery(); // refetch fresh data
+    galleryCache = {
+        favorites: null,
+        collections: null,
+        json1: null,
+        json2: null
+    };
+    console.log("♻️ Reloading", currentSet);
+    loadGallery(); // refetch fresh data
 });
+
+function hideCollectionHeader() {
+    if (collectionHeader) {
+        collectionHeader.classList.add("hidden");
+    }
+}
