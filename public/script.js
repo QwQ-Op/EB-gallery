@@ -237,13 +237,10 @@ gallery.addEventListener("click", async (e) => {
 
     // 📂 Render whole set (like favourites page render)
     if(e.target.classList.contains("view-set-btn")) {
-     const gistUrl = e.target.dataset.gistUrl;
-    const title = e.target.dataset.title;
-    const img = e.target.dataset.img;
-    const desc = e.target.dataset.description;
-    const url = e.target.dataset.url;
-console.log("Datasets:", e.target.dataset);
-        await renderCollection(gistUrl,title,img,desc,url);
+  const { gistUrl, title, img, description, url } = e.target.dataset;
+  console.log("Datasets:", e.target.dataset);
+
+  await renderCollection(gistUrl, title, img, description, url);
     }
 });
 
