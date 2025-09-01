@@ -490,13 +490,7 @@ gallery.innerHTML = "";
         const res = await fetch(gistUrl);
         const data = await res.json();
 
-        // Update page title + header
-        const titleElem = document.getElementById("page-title");
-        const imgElem = document.getElementById("page-image");
-        if(titleElem) titleElem.textContent = collectionTitle || "Collection";
-        if(imgElem) imgElem.src = collectionImg || "";
         // Update header
-
         document.getElementById("collection-img").src = collectionImg || "";
         document.getElementById("collection-title").textContent = collectionTitle || "Collection";
         document.getElementById("collection-description").textContent = collectionDescription || "";
