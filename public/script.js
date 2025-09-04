@@ -533,7 +533,43 @@ gallery.querySelectorAll(".view-set-btn").forEach(btn => {
     });
 });
 
-async function renderCollection(gistUrl, collectionTitle, collectionImg, collectionDescription, collectionUrl) {
+
+async function renderCollection(rawUrl, title, titleImg) {
+  try {
+    const res = await fetch(rawUrl);
+    const data = await res.json();
+
+    // update page title and header image
+    document.getElementById("page-title").textContent = title;
+    document.getElementById("page-thumb").src = titleImg || "";
+
+    // store globally for sorting / slideshow
+    galleryData = data.content || [];
+
+    // apply current sort mode
+    if (sortMode === "alpha") {
+      galleryData.sort((a, b) => (a.model || "").localeCompare(b.model || ""));
+    } else if (sortMode === "date") {
+      // collections content doesn’t have `date`, so skip
+      galleryData.sort((a, b) => (a.model || "").localeCompare(b.model || ""));
+    } else if (sortMode === "random") {
+      for (let i = galleryData.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [galleryData[i], galleryData[j]] = [galleryData[j], galleryData[i]];
+      }
+    }
+
+    // ✅ reuse the same renderer (handles fallbacks safely)
+    renderGallery(galleryData);
+
+  } catch (err) {
+    console.error("Error rendering collection:", err);
+  }
+}
+
+
+
+async function renderCollectionOld(gistUrl, collectionTitle, collectionImg, collectionDescription, collectionUrl) {
     console.log("renderCollections called");
 
     gallery.innerHTML = "";
