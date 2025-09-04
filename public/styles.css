@@ -494,13 +494,16 @@ body, h1, h2, .btn, .set-toggle .btn, .lock-card, .info, .card .info {
   to   { opacity: 1; transform: translateY(0); }
 }
 /* Responsive masonry */
-@media (max-width: 900px) {
-  .gallery.masonry { column-count: 2; }
+@media (min-width: 601px) and (max-width: 1024px) {
+  .gallery.masonry {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 @media (max-width: 600px) {
-  .gallery.masonry { column-count: 1; }
+  .gallery.masonry {
+    grid-template-columns: 1fr;
+  }
 }
-
 
 .layout-toggle {
   display: flex;
