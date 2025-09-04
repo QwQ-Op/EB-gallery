@@ -61,11 +61,19 @@ h1 {
   box-shadow: 0 8px 24px rgba(0,0,0,0.25); 
 }
 
-.card img {
+/* Grid mode: uniform card size */
+.gallery.grid .card img {
   width: 100%;
-  height: auto;        /* ✅ keep natural aspect ratio */
-  display: block;      /* removes bottom whitespace */
-  object-fit: contain; /* or cover, depending if you want cropping */
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Masonry mode: natural flow */
+.gallery.masonry .card img {
+  width: 100%;
+  height: auto;      /* 👈 no fixed height */
+  object-fit: contain; /* keeps full image inside */
+  display: block;
 }
 
 .info { 
