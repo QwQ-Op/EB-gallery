@@ -618,13 +618,31 @@ toggleSortBtn.addEventListener("click", () => {
     // inside a collection content → cycle alpha/random
     sortMode = sortMode === "alpha" ? "random" : "alpha";
     toggleSortBtn.textContent = sortMode === "alpha" ? "🔠" : "🎲";
-    // re-render active collection
-    const title = document.getElementById("collection-title").textContent;
-    const img = document.getElementById("collection-img").src;
-    const desc = document.getElementById("collection-description").textContent;
-    const url = document.getElementById("collection-link").href;
-    const gistUrl = document.querySelector(".view-set-btn")?.dataset.gistUrl;
-    if (gistUrl) renderCollection(gistUrl, title, img, desc, url);
+
+    // ✅ just re-sort galleryData already in memory
+    if (sortMode === "alpha") {
+      galleryData.sort((a, b) => (a.model || "").localeCompare(b.model || ""));
+    } else if (sortMode === "random") {
+      for (let i = galleryData.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [galleryData[i], galleryData[j]] = [galleryData[j], galleryData[i]];
+      }
+    }
+
+    // ✅ re-render cards without fetching again
+    gallery.innerHTML = "";
+    galleryData.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <img src="${item.cover}" alt="${item.model}">
+        <div class="info">
+          <div>${item.model}</div>
+          ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
+        </div>
+      `;
+      gallery.appendChild(card);
+    });
   }
 });
 
