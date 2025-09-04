@@ -572,13 +572,13 @@ function hideCollectionHeader() {
     }
 }
 toggleBtn.addEventListener('click', () => {
-  if (gallery2.classList.contains('grid')) {
-    gallery2.classList.remove('grid');
-    gallery2.classList.add('masonry');
-    toggleBtn.textContent = "Switch to Grid";
+  if (gallery.classList.contains('grid')) {
+    gallery.classList.remove('grid');
+    gallery.classList.add('masonry');
+    toggleBtn.textContent = "🗃";
   } else {
-    gallery2.classList.remove('masonry');
-    gallery2.classList.add('grid');
-    toggleBtn.textContent = "Switch to Masonry";
+    gallery.classList.remove('masonry');
+    gallery.classList.add('grid');
+    toggleBtn.textContent = "🧱";
   }
 });
