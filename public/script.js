@@ -688,6 +688,7 @@ randomSortBtn.addEventListener("click", () => {
 function renderGallery(items) {
   gallery.innerHTML = "";
   items.forEach((item, index) => {
+console.log("Rendering item:", item);
     const card = document.createElement("div");
     card.className = "card";
 
@@ -729,7 +730,6 @@ card.innerHTML = `
   </div>
 `;
     }
-console.log("Rendering item:", item);
 
     gallery.appendChild(card);
   });
