@@ -604,3 +604,54 @@ toggleSortBtn.addEventListener("click", () => {
   toggleSortBtn.textContent = sortMode === "alpha" ? "🔠" : "📅";
   loadGallery(); // reload with new sorting
 });
+
+const randomSortBtn = document.getElementById("random-sort");
+
+randomSortBtn.addEventListener("click", () => {
+  if (!galleryData || galleryData.length === 0) return;
+
+  // Fisher–Yates shuffle
+  for (let i = galleryData.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [galleryData[i], galleryData[j]] = [galleryData[j], galleryData[i]];
+  }
+
+  // re-render without touching cache
+  gallery.innerHTML = "";
+  galleryData.forEach((item, index) => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    if (currentSet === "favorites") {
+      card.innerHTML = `
+        <input type="checkbox" class="delete-checkbox" data-index="${index}">
+        <img src="${item.cover}" alt="${item.model}">
+        <div class="info">
+          <div>${item.model}</div>
+          ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
+        </div>
+      `;
+    } else if (currentSet === "collections") {
+      card.innerHTML = `
+        ${deleteMode ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` : ""}
+        <img src="${item.title_img}" alt="${item.title}">
+        <div class="info">
+          <div>${item.title}</div>
+          ${item.collection_url ? `<a href="${item.collection_url}" target="_blank">Source</a>` : ""}
+          ${item.rawUrl ? `
+            <button 
+              class="btn view-set-btn" 
+              data-gist-url="${item.rawUrl}" 
+              data-title="${item.title}" 
+              data-img="${item.title_img}" 
+              data-description="${item.description}" 
+              data-url="${item.collection_url}">
+              View Set
+            </button>` : ""}
+        </div>
+      `;
+    }
+
+    gallery.appendChild(card);
+  });
+});
