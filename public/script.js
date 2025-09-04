@@ -1,4 +1,6 @@
 // DOM elements
+const fallbackCover = "https://via.placeholder.com/300x400?text=No+Image";
+
 const gallery = document.getElementById("gallery");
 const addFavBtn = document.getElementById("add-fav-btn");
 const overlay = document.getElementById("overlay");
@@ -718,15 +720,16 @@ function renderGallery(items) {
         </div>
       `;
     } else {
-      // ✅ content array from gist (collection photos)
-      card.innerHTML = `
-        <img src="${item.cover || ""}" alt="${item.model || "Untitled"}">
-        <div class="info">
-          <div>${item.model || "Unknown"}</div>
-          ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
-        </div>
-      `;
+// content array from gist (collection photos)
+card.innerHTML = `
+  <img src="${item.cover || fallbackCover}" alt="${item.model || "Untitled"}">
+  <div class="info">
+    <div>${item.model || "Unknown"}</div>
+    ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
+  </div>
+`;
     }
+console.log("Rendering item:", item);
 
     gallery.appendChild(card);
   });
