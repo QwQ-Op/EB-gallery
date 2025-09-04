@@ -19,7 +19,7 @@ const closeSlideBtn = document.getElementById("close-slide-btn");
 
 const pageTitle = document.getElementById("page-title");
 
-const gallery = document.querySelector('.gallery');
+const gallery2 = document.querySelector('.gallery');
 const toggleBtn = document.getElementById('toggle-layout');
 
 const collectionHeader = document.getElementById("collection-header");
@@ -572,13 +572,13 @@ function hideCollectionHeader() {
     }
 }
 toggleBtn.addEventListener('click', () => {
-  if (gallery.classList.contains('grid')) {
-    gallery.classList.remove('grid');
-    gallery.classList.add('masonry');
+  if (gallery2.classList.contains('grid')) {
+    gallery2.classList.remove('grid');
+    gallery2.classList.add('masonry');
     toggleBtn.textContent = "Switch to Grid";
   } else {
-    gallery.classList.remove('masonry');
-    gallery.classList.add('grid');
+    gallery2.classList.remove('masonry');
+    gallery2.classList.add('grid');
     toggleBtn.textContent = "Switch to Masonry";
   }
 });
