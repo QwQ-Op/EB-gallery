@@ -280,6 +280,9 @@ header h1 {
 #page-title {
   transition: opacity 0.4s ease, transform 0.4s ease;
   display: inline-block;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 }
 #page-title.fade-out {
   opacity: 0;
