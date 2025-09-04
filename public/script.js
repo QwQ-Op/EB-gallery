@@ -549,7 +549,16 @@ async function renderCollection(gistUrl, collectionTitle, collectionImg, collect
         collectionHeader.classList.remove("hidden");
 
         // Save data globally for slideshow
-        galleryData = data.content;
+        galleryData = data.content || [];
+
+    if (sortMode === "alpha") {
+      galleryData.sort((a, b) => (a.model || "").localeCompare(b.model || ""));
+    } else if (sortMode === "random") {
+      for (let i = galleryData.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [galleryData[i], galleryData[j]] = [galleryData[j], galleryData[i]];
+      }
+    }
 
         gallery.innerHTML = "";
         data.content.forEach((item, idx) => {
@@ -600,10 +609,25 @@ toggleBtn.addEventListener('click', () => {
 });
 
 toggleSortBtn.addEventListener("click", () => {
-  sortMode = sortMode === "alpha" ? "date" : "alpha";
-  toggleSortBtn.textContent = sortMode === "alpha" ? "🔠" : "📅";
-  loadGallery(); // reload with new sorting
+  if (currentSet === "favorites" || currentSet === "collections") {
+    // cycle alpha/date
+    sortMode = sortMode === "alpha" ? "date" : "alpha";
+    toggleSortBtn.textContent = sortMode === "alpha" ? "🔠" : "📅";
+    loadGallery();
+  } else {
+    // inside a collection content → cycle alpha/random
+    sortMode = sortMode === "alpha" ? "random" : "alpha";
+    toggleSortBtn.textContent = sortMode === "alpha" ? "🔠" : "🎲";
+    // re-render active collection
+    const title = document.getElementById("collection-title").textContent;
+    const img = document.getElementById("collection-img").src;
+    const desc = document.getElementById("collection-description").textContent;
+    const url = document.getElementById("collection-link").href;
+    const gistUrl = document.querySelector(".view-set-btn")?.dataset.gistUrl;
+    if (gistUrl) renderCollection(gistUrl, title, img, desc, url);
+  }
 });
+
 
 const randomSortBtn = document.getElementById("random-sort");
 
