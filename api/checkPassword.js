@@ -45,7 +45,11 @@ export default async function handler(req, res) {
 
     // 🔑 create a simple session token
     const token = crypto.randomBytes(16).toString("hex");
-
+await db.collection("sessions").insertOne({
+  token,
+  createdAt: new Date(),
+  expiresAt: new Date(Date.now() + 2 * 60 * 60 * 1000) // 2 hours
+});
     // send as cookie
     res.setHeader("Set-Cookie", `session=${token}; HttpOnly; Path=/; Max-Age=7200`);
 
