@@ -22,6 +22,9 @@ const pageTitle = document.getElementById("page-title");
 const gallery2 = document.querySelector('.gallery');
 const toggleBtn = document.getElementById('toggle-layout');
 
+let sortMode = "alpha"; // default
+const toggleSortBtn = document.getElementById("toggle-sort");
+
 const collectionHeader = document.getElementById("collection-header");
 collectionHeader.classList.add("hidden");
 
@@ -104,7 +107,20 @@ async function loadGallery() {
     }
 
     // Render the gallery based on the fetched data
-    galleryData = data;
+galleryData = data;
+
+// ✅ Apply sorting (only for favorites & collections)
+if (currentSet === "favorites" || currentSet === "collections") {
+  if (sortMode === "alpha") {
+    galleryData.sort((a, b) => {
+      const fieldA = (a.model || a.title || "").toLowerCase();
+      const fieldB = (b.model || b.title || "").toLowerCase();
+      return fieldA.localeCompare(fieldB);
+    });
+  } else {
+    galleryData.sort((a, b) => new Date(b.date) - new Date(a.date));
+  }
+}
     if (data.length === 0) {
         gallery.innerHTML = "<p>No items found in this category.</p>";
         return;
@@ -581,4 +597,10 @@ toggleBtn.addEventListener('click', () => {
     gallery.classList.add('grid');
     toggleBtn.textContent = "🧱";
   }
+});
+
+toggleSortBtn.addEventListener("click", () => {
+  sortMode = sortMode === "alpha" ? "date" : "alpha";
+  toggleSortBtn.textContent = sortMode === "alpha" ? "🔠" : "📅";
+  loadGallery(); // reload with new sorting
 });
