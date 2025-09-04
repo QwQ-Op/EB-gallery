@@ -481,3 +481,10 @@ body, h1, h2, .btn, .set-toggle .btn, .lock-card, .info, .card .info {
 @media (max-width: 600px) {
   .gallery.masonry { column-count: 1; }
 }
+
+
+.layout-toggle {
+  display: flex;
+  justify-content: center; /* ✅ center horizontally */
+  margin: 1.5rem 0;        /* spacing above/below */
+}
