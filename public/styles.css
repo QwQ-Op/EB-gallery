@@ -25,21 +25,17 @@ h1 {
   margin-bottom: 16px;
 }
 
-.gallery { 
-  display: grid; 
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
-  gap: 12px; 
+.gallery {
+  column-count: 3;         /* number of columns on desktop */
+  column-gap: 16px;
   padding: 12px 16px 24px;
 }
 
-.card { 
-  background: var(--card); 
-  border: 1px solid #2a2d44; 
-  border-radius: 16px; 
-  overflow: hidden; 
-  display: flex; 
-  flex-direction: column; 
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+.card {
+  display: inline-block;   /* needed for column flow */
+  width: 100%;
+  margin-bottom: 16px;
+  break-inside: avoid;     /* prevents cutting cards between columns */
 }
 
 .card:hover { 
