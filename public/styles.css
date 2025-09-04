@@ -25,17 +25,24 @@ h1 {
   margin-bottom: 16px;
 }
 
-.gallery {
-  column-count: 3;         /* number of columns on desktop */
-  column-gap: 16px;
-  padding: 12px 16px 24px;
+/* Default: Grid layout (preserves order) */
+.gallery.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
 }
 
-.card {
-  display: inline-block;   /* needed for column flow */
+/* Masonry layout (Pinterest style, order breaks) */
+.gallery.masonry {
+  column-count: 3;
+  column-gap: 16px;
+}
+
+.gallery.masonry .card {
+  display: inline-block;
   width: 100%;
   margin-bottom: 16px;
-  break-inside: avoid;     /* prevents cutting cards between columns */
+  break-inside: avoid;
 }
 
 .card:hover { 
@@ -467,14 +474,10 @@ body, h1, h2, .btn, .set-toggle .btn, .lock-card, .info, .card .info {
   from { opacity: 0; transform: translateY(-10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+/* Responsive masonry */
 @media (max-width: 900px) {
-  .gallery {
-    column-count: 2;
-  }
+  .gallery.masonry { column-count: 2; }
 }
-
 @media (max-width: 600px) {
-  .gallery {
-    column-count: 1;
-  }
+  .gallery.masonry { column-count: 1; }
 }
