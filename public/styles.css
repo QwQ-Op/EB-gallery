@@ -47,10 +47,11 @@ h1 {
   box-shadow: 0 8px 24px rgba(0,0,0,0.25); 
 }
 
-.card img { 
-  width: 100%; 
-  height: 200px;
-  object-fit: cover;
+.card img {
+  width: 100%;
+  height: auto;        /* ✅ keep natural aspect ratio */
+  display: block;      /* removes bottom whitespace */
+  object-fit: contain; /* or cover, depending if you want cropping */
 }
 
 .info { 
