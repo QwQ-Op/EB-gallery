@@ -129,7 +129,7 @@ async function loadGallery() {
         ${item.collection_url ? `<a href="${item.collection_url}" target="_blank">Source</a>` : ""}
   ${item.rawUrl ? `
             <button 
-              class="view-set-btn" 
+              class="btn view-set-btn" 
               data-gist-url="${item.rawUrl}" 
               data-title="${item.title}" 
               data-img="${item.title_img}" 
