@@ -470,13 +470,13 @@ async function autoLogin() {
             document.getElementById("lock-screen").style.display = "none";
             document.getElementById("app").style.display = "block";
         } else {
-            document.getElementById("lock-screen").style.display = "block";
-            document.getElementById("app").style.display = "none";
+document.getElementById("lock-screen").style.display = "flex";
+document.getElementById("app").style.display = "none";
         }
     } catch (err) {
         console.error(err);
-        document.getElementById("lock-screen").style.display = "block";
-        document.getElementById("app").style.display = "none";
+document.getElementById("lock-screen").style.display = "flex";
+document.getElementById("app").style.display = "none";
     }
 }
 
