@@ -441,11 +441,28 @@ async function checkPassword() {
 
 document.getElementById("login-btn").addEventListener("click", checkPassword);
 
-// Auto-login if already authenticated
-if (localStorage.getItem("auth") === "true") {
-    document.getElementById("lock-screen").style.display = "none";
-    document.getElementById("app").style.display = "block";
+// --- Auto-login if already authenticated via cookie ---
+async function autoLogin() {
+    try {
+        const res = await fetch("/api/validateSession");
+        const data = await res.json();
+
+        if (data.success) {
+            document.getElementById("lock-screen").style.display = "none";
+            document.getElementById("app").style.display = "block";
+        } else {
+            document.getElementById("lock-screen").style.display = "block";
+            document.getElementById("app").style.display = "none";
+        }
+    } catch (err) {
+        console.error(err);
+        document.getElementById("lock-screen").style.display = "block";
+        document.getElementById("app").style.display = "none";
+    }
 }
+
+// Run autoLogin on page load
+autoLogin();
 
 // Toggle button event listener
 const favControls = document.getElementById("fav-controls");
