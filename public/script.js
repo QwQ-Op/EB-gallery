@@ -1,5 +1,6 @@
 // DOM elements
 const fallbackCover = "https://via.placeholder.com/300x400?text=No+Image";
+let inCollectionView = false;
 
 const gallery = document.getElementById("gallery");
 const addFavBtn = document.getElementById("add-fav-btn");
@@ -490,6 +491,7 @@ const favControls = document.getElementById("fav-controls");
 
 document.querySelectorAll(".set-toggle .btn").forEach(button => {
     button.addEventListener("click", (e) => {
+ inCollectionView = false;
         const targetSet = e.target.dataset.set;
         if (targetSet && targetSet !== currentSet) {
             currentSet = targetSet;
@@ -536,7 +538,7 @@ gallery.querySelectorAll(".view-set-btn").forEach(btn => {
 
 async function renderCollection(gistUrl, collectionTitle, collectionImg, collectionDescription, collectionUrl) {
     console.log("renderCollections called");
-
+inCollectionView = true; 
     gallery.innerHTML = "";
     try {
         // Fetch gist JSON
@@ -689,14 +691,22 @@ randomSortBtn.addEventListener("click", () => {
 function renderGallery(items) {
   gallery.innerHTML = "";
   items.forEach((item, index) => {
-console.log("Rendering item:", item);
     const card = document.createElement("div");
     card.className = "card";
 
-    if (currentSet === "favorites") {
+    if (inCollectionView) {
+      // ✅ content array from gist (photos inside a collection)
+      card.innerHTML = `
+        <img src="${item.cover || fallbackCover}" alt="${item.model || "Untitled"}">
+        <div class="info">
+          <div>${item.model || "Unknown"}</div>
+          ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
+        </div>
+      `;
+    } else if (currentSet === "favorites") {
       card.innerHTML = `
         <input type="checkbox" class="delete-checkbox" data-index="${index}">
-        <img src="${item.cover || ""}" alt="${item.model || "No name"}">
+        <img src="${item.cover || fallbackCover}" alt="${item.model || "No name"}">
         <div class="info">
           <div>${item.model || "Unknown"}</div>
           ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
@@ -705,7 +715,7 @@ console.log("Rendering item:", item);
     } else if (currentSet === "collections") {
       card.innerHTML = `
         ${deleteMode ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` : ""}
-        <img src="${item.title_img || ""}" alt="${item.title || "No title"}">
+        <img src="${item.title_img || fallbackCover}" alt="${item.title || "No title"}">
         <div class="info">
           <div>${item.title || "Untitled"}</div>
           ${item.collection_url ? `<a href="${item.collection_url}" target="_blank">Source</a>` : ""}
@@ -721,15 +731,6 @@ console.log("Rendering item:", item);
             </button>` : ""}
         </div>
       `;
-    } else {
-// content array from gist (collection photos)
-card.innerHTML = `
-  <img src="${item.cover || fallbackCover}" alt="${item.model || "Untitled"}">
-  <div class="info">
-    <div>${item.model || "Unknown"}</div>
-    ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
-  </div>
-`;
     }
 
     gallery.appendChild(card);
