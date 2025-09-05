@@ -76,16 +76,11 @@ async function fetchJsonData(url) {
 }
 
 async function loadGallery() {
-    console.log("✅ loadGallery called for", currentSet); // DEBUG
+    console.log("✅ loadGallery called for", currentSet);
+    gallery.innerHTML = "";
 
-    const thisSet = currentSet; // snapshot
-
-    gallery.innerHTML = ""; // Clear the gallery
-
-    let data = galleryCache[currentSet]; // check cache first
-
+    let data = galleryCache[currentSet];
     if (!data) {
-        // not cached → fetch
         try {
             if (currentSet === 'json1') {
                 const res = await fetch('/api/fetchJson?set=json1');
@@ -105,32 +100,21 @@ async function loadGallery() {
             data = [];
         }
 
-        // store in cache
         galleryCache[currentSet] = data;
     }
 
-    // Render the gallery based on the fetched data
-galleryData = data;
+    galleryData = data;
 
-// ✅ Apply sorting (only for favorites & collections)
-if (currentSet === "favorites" || currentSet === "collections") {
-  if (sortMode === "alpha") {
-    galleryData.sort((a, b) => {
-      const fieldA = (a.model || a.title || "").toLowerCase();
-      const fieldB = (b.model || b.title || "").toLowerCase();
-      return fieldA.localeCompare(fieldB);
-    });
-  } else {
-    galleryData.sort((a, b) => new Date(b.date) - new Date(a.date));
-  }
-}
-    if (data.length === 0) {
-        gallery.innerHTML = "<p>No items found in this category.</p>";
-        return;
+    // Apply sorting
+    if (currentSet === "favorites" || currentSet === "collections") {
+        if (sortMode === "alpha") {
+            galleryData.sort((a, b) => (a.model || a.title || "").toLowerCase().localeCompare((b.model || b.title || "").toLowerCase()));
+        } else {
+            galleryData.sort((a, b) => new Date(b.date) - new Date(a.date));
+        }
     }
-    renderGallery(galleryData);
-    if (thisSet !== currentSet) return;
 
+    renderGallery(galleryData);
 }
 
 loadGallery();
@@ -581,7 +565,7 @@ toggleSortBtn.addEventListener("click", () => {
   if (currentSet === "favorites" || currentSet === "collections") {
     sortMode = sortMode === "alpha" ? "date" : "alpha";
     toggleSortBtn.textContent = sortMode === "alpha" ? "🔠" : "📅";
-    loadGallery();
+    loadGallery(); // ✅ already renders via renderGallery
   } else {
     sortMode = sortMode === "alpha" ? "random" : "alpha";
     toggleSortBtn.textContent = sortMode === "alpha" ? "🔠" : "🎲";
@@ -595,7 +579,7 @@ toggleSortBtn.addEventListener("click", () => {
       }
     }
 
-    renderGallery(galleryData); // ✅ safe render
+    renderGallery(galleryData); // ✅ centralized
   }
 });
 
@@ -611,44 +595,7 @@ randomSortBtn.addEventListener("click", () => {
     [galleryData[i], galleryData[j]] = [galleryData[j], galleryData[i]];
   }
 
-  // re-render without touching cache
-  gallery.innerHTML = "";
-  galleryData.forEach((item, index) => {
-    const card = document.createElement("div");
-    card.className = "card";
-
-    if (currentSet === "favorites") {
-      card.innerHTML = `
-        <input type="checkbox" class="delete-checkbox" data-index="${index}">
-        <img src="${item.cover}" alt="${item.model}">
-        <div class="info">
-          <div>${item.model}</div>
-          ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
-        </div>
-      `;
-    } else if (currentSet === "collections") {
-      card.innerHTML = `
-        ${deleteMode ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` : ""}
-        <img src="${item.title_img}" alt="${item.title}">
-        <div class="info">
-          <div>${item.title}</div>
-          ${item.collection_url ? `<a href="${item.collection_url}" target="_blank">Source</a>` : ""}
-          ${item.rawUrl ? `
-            <button 
-              class="btn view-set-btn" 
-              data-gist-url="${item.rawUrl}" 
-              data-title="${item.title}" 
-              data-img="${item.title_img}" 
-              data-description="${item.description}" 
-              data-url="${item.collection_url}">
-              View Set
-            </button>` : ""}
-        </div>
-      `;
-    }
-
-    gallery.appendChild(card);
-  });
+  renderGallery(galleryData); // ✅ centralized
 });
 
 
