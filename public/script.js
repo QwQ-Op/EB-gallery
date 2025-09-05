@@ -561,26 +561,17 @@ toggleBtn.addEventListener('click', () => {
   }
 });
 
+// --- Toggle sort button ---
 toggleSortBtn.addEventListener("click", () => {
   if (currentSet === "favorites" || currentSet === "collections") {
     sortMode = sortMode === "alpha" ? "date" : "alpha";
     toggleSortBtn.textContent = sortMode === "alpha" ? "🔠" : "📅";
-    loadGallery(); // ✅ already renders via renderGallery
   } else {
     sortMode = sortMode === "alpha" ? "random" : "alpha";
     toggleSortBtn.textContent = sortMode === "alpha" ? "🔠" : "🎲";
-
-    if (sortMode === "alpha") {
-      galleryData.sort((a, b) => (a.model || "").localeCompare(b.model || ""));
-    } else if (sortMode === "random") {
-      for (let i = galleryData.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [galleryData[i], galleryData[j]] = [galleryData[j], galleryData[i]];
-      }
-    }
-
-    renderGallery(galleryData); // ✅ centralized
   }
+
+  renderGallery(galleryData); // ✅ render with new sortMode
 });
 
 
@@ -589,23 +580,46 @@ const randomSortBtn = document.getElementById("random-sort");
 randomSortBtn.addEventListener("click", () => {
   if (!galleryData || galleryData.length === 0) return;
 
-  // Fisher–Yates shuffle
+  // Use Fisher–Yates shuffle
   for (let i = galleryData.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [galleryData[i], galleryData[j]] = [galleryData[j], galleryData[i]];
   }
 
-  renderGallery(galleryData); // ✅ centralized
+  renderGallery(galleryData); // ✅ re-render shuffled items
 });
 
 
 function renderGallery(items) {
   gallery.innerHTML = "";
-  items.forEach((item, index) => {
+
+  // --- Sort items first ---
+  let sortedItems = [...items]; // copy to avoid mutating original
+
+  if (currentSet === "favorites" || currentSet === "collections") {
+    if (sortMode === "alpha") {
+      sortedItems.sort((a, b) => {
+        const fieldA = (a.model || a.title || "").toLowerCase();
+        const fieldB = (b.model || b.title || "").toLowerCase();
+        return fieldA.localeCompare(fieldB);
+      });
+    } else if (sortMode === "date") {
+      sortedItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+  } else if (sortMode === "alpha") {
+    sortedItems.sort((a, b) => (a.model || "").localeCompare(b.model || ""));
+  } else if (sortMode === "random") {
+    for (let i = sortedItems.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [sortedItems[i], sortedItems[j]] = [sortedItems[j], sortedItems[i]];
+    }
+  }
+
+  // --- Render sorted items ---
+  sortedItems.forEach((item, index) => {
     const card = document.createElement("div");
     card.className = "card";
 
-    // Decide how to render the item
     let img, name, link, extraButton;
 
     if (inCollectionView || currentSet === "favorites") {
@@ -629,7 +643,6 @@ function renderGallery(items) {
         </button>` : "";
     }
 
-    // Include checkbox for delete mode if applicable
     const checkbox = (deleteMode && (currentSet === "favorites" || currentSet === "collections")) 
       ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` 
       : "";
