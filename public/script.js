@@ -605,44 +605,44 @@ function renderGallery(items) {
     const card = document.createElement("div");
     card.className = "card";
 
-    if (inCollectionView) {
-      // ✅ content array from gist (photos inside a collection)
-      card.innerHTML = `
-        <img src="${item.cover || fallbackCover}" alt="${item.model || "Untitled"}">
-        <div class="info">
-          <div>${item.model || "Unknown"}</div>
-          ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
-        </div>
-      `;
-    } else if (currentSet === "favorites") {
-      card.innerHTML = `
-        <input type="checkbox" class="delete-checkbox" data-index="${index}">
-        <img src="${item.cover || fallbackCover}" alt="${item.model || "No name"}">
-        <div class="info">
-          <div>${item.model || "Unknown"}</div>
-          ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
-        </div>
-      `;
+    // Decide how to render the item
+    let img, name, link, extraButton;
+
+    if (inCollectionView || currentSet === "favorites") {
+      img = item.cover || fallbackCover;
+      name = item.model || "Unknown";
+      link = item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : "";
+      extraButton = "";
     } else if (currentSet === "collections") {
-      card.innerHTML = `
-        ${deleteMode ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` : ""}
-        <img src="${item.title_img || fallbackCover}" alt="${item.title || "No title"}">
-        <div class="info">
-          <div>${item.title || "Untitled"}</div>
-          ${item.collection_url ? `<a href="${item.collection_url}" target="_blank">Source</a>` : ""}
-          ${item.rawUrl ? `
-            <button 
-              class="btn view-set-btn" 
-              data-gist-url="${item.rawUrl}" 
-              data-title="${item.title || ""}" 
-              data-img="${item.title_img || ""}" 
-              data-description="${item.description || ""}" 
-              data-url="${item.collection_url || ""}">
-              View Set
-            </button>` : ""}
-        </div>
-      `;
+      img = item.title_img || fallbackCover;
+      name = item.title || "Untitled";
+      link = item.collection_url ? `<a href="${item.collection_url}" target="_blank">Source</a>` : "";
+      extraButton = item.rawUrl ? `
+        <button 
+          class="btn view-set-btn" 
+          data-gist-url="${item.rawUrl}" 
+          data-title="${item.title || ""}" 
+          data-img="${item.title_img || ""}" 
+          data-description="${item.description || ""}" 
+          data-url="${item.collection_url || ""}">
+          View Set
+        </button>` : "";
     }
+
+    // Include checkbox for delete mode if applicable
+    const checkbox = (deleteMode && (currentSet === "favorites" || currentSet === "collections")) 
+      ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` 
+      : "";
+
+    card.innerHTML = `
+      ${checkbox}
+      <img src="${img}" alt="${name}">
+      <div class="info">
+        <div>${name}</div>
+        ${link}
+        ${extraButton}
+      </div>
+    `;
 
     gallery.appendChild(card);
   });
