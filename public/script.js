@@ -522,7 +522,7 @@ inCollectionView = true;
         <img src="${item.cover}" alt="${item.model}">
         <div class="info">
           <div>${item.model}</div>
-          ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : ""}
+          ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">👁</a>` : ""}
         </div>
       `;
             gallery.appendChild(card);
@@ -626,7 +626,7 @@ function renderGallery(items) {
     if (inCollectionView || currentSet === "favorites") {
       img = item.cover || fallbackCover;
       name = item.model || "Unknown";
-      link = item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set</a>` : "";
+      link = item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">👁</a>` : "";
       extraButton = "";
     } else if (currentSet === "collections") {
       img = item.title_img || fallbackCover;
