@@ -217,11 +217,12 @@ gallery.addEventListener("click", async (e) => {
             title,
             img,
             description,
-            url
+            url,
+            gistId
         } = e.target.dataset;
         console.log("Datasets:", e.target.dataset);
 
-        await renderCollection(gistUrl, title, img, description, url);
+        await renderCollection(gistUrl, title, img, description, url, gistId);
     }
 });
 
@@ -480,7 +481,7 @@ gallery.querySelectorAll(".view-set-btn").forEach(btn => {
 });
 
 
-async function renderCollection(gistUrl, collectionTitle, collectionImg, collectionDescription, collectionUrl) {
+async function renderCollection(gistUrl, collectionTitle, collectionImg, collectionDescription, collectionUrl, gistId) {
     console.log("renderCollections called");
 inCollectionView = true; 
     gallery.innerHTML = "";
@@ -495,6 +496,7 @@ inCollectionView = true;
         document.getElementById("collection-description").textContent = collectionDescription || "";
         document.getElementById("collection-set-count").textContent = `${data.content.length > 1 ? `${data.content.length} galleries`:`${data.content.length} gallery`}` || "NaN";
         document.getElementById("collection-link").href = collectionUrl || "https://google.com";
+        window.currentGistId = gistId;
         favControls.classList.add("hidden");
         collectionHeader.classList.remove("hidden");
 
@@ -635,7 +637,8 @@ function renderGallery(items) {
           data-title="${item.title || ""}" 
           data-img="${item.title_img || ""}" 
           data-description="${item.description || ""}" 
-          data-url="${item.collection_url || ""}">
+          data-url="${item.collection_url || ""}
+          data-gist-id="${item.gistId || ""}">
           View Set
         </button>` : "";
     }
@@ -656,4 +659,42 @@ function renderGallery(items) {
 
     gallery.appendChild(card);
   });
+}
+
+document.getElementById("copy-gist-btn").addEventListener("click", () => {
+  if (window.currentGistId) {
+    navigator.clipboard.writeText(window.currentGistId)
+      .then(() => showToast("✅ Gist ID copied!"))
+      .catch(() => showToast("❌ Copy failed"));
+  } else {
+    showToast("❌ No Gist ID set");
+  }
+});
+
+function showToast(message) {
+  let toast = document.getElementById("toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "toast";
+    toast.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      z-index: 9999;
+    `;
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = message;
+  toast.style.opacity = "1";
+  setTimeout(() => { toast.style.opacity = "0"; }, 1500);
 }
