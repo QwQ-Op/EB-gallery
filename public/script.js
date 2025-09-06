@@ -82,17 +82,14 @@ async function loadGallery() {
     let data = galleryCache[currentSet];
     if (!data) {
         try {
-            if (currentSet === 'json1') {
-                const res = await fetch('/api/fetchJson?set=json1');
-                data = res.ok ? await res.json() : [];
-            } else if (currentSet === 'json2') {
-                const res = await fetch('/api/fetchJson?set=json2');
-                data = res.ok ? await res.json() : [];
-            } else if (currentSet === 'favorites') {
+            if (currentSet === 'favorites') {
                 const res = await fetch('/api/getFavorites');
                 data = res.ok ? await res.json() : [];
             } else if (currentSet === 'collections') {
                 const res = await fetch('/api/getCollections');
+                data = res.ok ? await res.json() : [];
+            } else if (currentSet === 'pinboards') {
+                const res = await fetch('/api/getPinboards');
                 data = res.ok ? await res.json() : [];
             }
         } catch (err) {
@@ -106,7 +103,7 @@ async function loadGallery() {
     galleryData = data;
 
     // Apply sorting
-    if (currentSet === "favorites" || currentSet === "collections") {
+    if (currentSet === "favorites" || currentSet === "collections" || currentSet === "pinboards") {
         if (sortMode === "alpha") {
             galleryData.sort((a, b) => (a.model || a.title || "").toLowerCase().localeCompare((b.model || b.title || "").toLowerCase()));
         } else {
@@ -176,7 +173,7 @@ deleteSelectedBtn.addEventListener("click", async () => {
                 })
             });
             if (!res.ok) throw new Error("Failed to delete favorites");
-        } else if (currentSet === "collections") {
+        } else if (currentSet === "collections" || currentSet === "pinboards") {
             // Map indexes → gistIds
             const gistIds = selected.map(i => galleryData[i].gistId);
 
@@ -375,8 +372,7 @@ function updateSlide() {
 
 function updateTitle(set) {
     let newTitle = "💫⭐ My Favorites ⭐💫";
-    if (set === "json1") newTitle = "🍑 Cute Butts 🍑";
-    if (set === "json2") newTitle = "😻 Innie Pussies 😻";
+    if (set === "pinboards") newTitle = "📌 Pinboards 📌";
     if (set === "collections") newTitle = "📚 Collections 📚";
 
     // Fade out → change → fade in
@@ -452,7 +448,7 @@ document.querySelectorAll(".set-toggle .btn").forEach(button => {
             if (targetSet === "favorites") {
                 favControls.classList.remove("hidden");
                 hideCollectionHeader();
-            } else if (targetSet === "collections") {
+            } else if (targetSet === "collections" || targetSet === "pinboards") {
                 favControls.classList.remove("hidden");
                 hideCollectionHeader();
             } else {
@@ -564,7 +560,7 @@ toggleBtn.addEventListener('click', () => {
 
 // --- Toggle sort button ---
 toggleSortBtn.addEventListener("click", () => {
-  if (currentSet === "favorites" || currentSet === "collections") {
+  if (currentSet === "favorites" || currentSet === "collections" || currentSet === "pinboards") {
     sortMode = sortMode === "alpha" ? "date" : "alpha";
     toggleSortBtn.textContent = sortMode === "alpha" ? "🔠" : "📅";
   } else {
@@ -597,7 +593,7 @@ function renderGallery(items) {
   // --- Sort items first ---
   let sortedItems = [...items]; // copy to avoid mutating original
 
-  if (currentSet === "favorites" || currentSet === "collections") {
+  if (currentSet === "favorites" || currentSet === "collections" || currentSet === "pinboards") {
     if (sortMode === "alpha") {
       sortedItems.sort((a, b) => {
         const fieldA = (a.model || a.title || "").toLowerCase();
@@ -628,7 +624,7 @@ function renderGallery(items) {
       name = item.model || "Unknown";
       link = item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">👁</a>` : "";
       extraButton = "";
-    } else if (currentSet === "collections") {
+    } else if (currentSet === "collections" || currentSet === "pinboards") {
       img = item.title_img || fallbackCover;
       name = item.title || "Untitled";
       link = item.collection_url ? `<a href="${item.collection_url}" target="_blank">Source</a>` : "";
@@ -644,7 +640,7 @@ function renderGallery(items) {
         </button>` : "";
     }
 
-    const checkbox = (deleteMode && (currentSet === "favorites" || currentSet === "collections")) 
+    const checkbox = (deleteMode && (currentSet === "favorites" || currentSet === "collections" || currentSet === "pinboards")) 
       ? `<input type="checkbox" class="delete-checkbox" data-index="${index}">` 
       : "";
 
