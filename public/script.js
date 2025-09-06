@@ -520,7 +520,7 @@ inCollectionView = true;
         <img src="${item.cover}" alt="${item.model}">
         <div class="info">
           <div>${item.model}</div>
-          ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">👁</a>` : ""}
+          ${item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set~</a>` : ""}
         </div>
       `;
             gallery.appendChild(card);
@@ -624,7 +624,7 @@ function renderGallery(items) {
     if (inCollectionView || currentSet === "favorites") {
       img = item.cover || fallbackCover;
       name = item.model || "Unknown";
-      link = item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">👁</a>` : "";
+      link = item.photoset ? `<a href="${item.photoset}" target="_blank" class="view-set-btn">View Set~</a>` : "";
       extraButton = "";
     } else if (currentSet === "collections" || currentSet === "pinboards") {
       img = item.title_img || fallbackCover;
@@ -637,9 +637,9 @@ function renderGallery(items) {
           data-title="${item.title || ""}" 
           data-img="${item.title_img || ""}" 
           data-description="${item.description || ""}" 
-          data-url="${item.collection_url || ""}
+          data-url="${item.collection_url || ""}"
           data-gist-id="${item.gistId || ""}">
-          View Set
+          👁
         </button>` : "";
     }
 
