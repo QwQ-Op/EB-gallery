@@ -497,6 +497,7 @@ inCollectionView = true;
         document.getElementById("collection-img").src = collectionImg || "";
         document.getElementById("collection-title").textContent = collectionTitle || "Collection";
         document.getElementById("collection-description").textContent = collectionDescription || "";
+        document.getElementById("collection-set-count").textContent = `${data.content.length > 1 ? `${data.content.length} galleries`:`${data.content.length} gallery`}` || "NaN";
         document.getElementById("collection-link").href = collectionUrl || "https://google.com";
         favControls.classList.add("hidden");
         collectionHeader.classList.remove("hidden");
